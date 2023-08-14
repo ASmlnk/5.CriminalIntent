@@ -30,5 +30,4 @@ class CrimeListAdapter(private val crimes: List<Crime>): RecyclerView.Adapter<Cr
     }
 
     override fun getItemCount() = crimes.size
-
 }
