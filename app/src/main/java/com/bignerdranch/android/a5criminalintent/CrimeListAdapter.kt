@@ -2,11 +2,27 @@ package com.bignerdranch.android.a5criminalintent
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.a5criminalintent.databinding.ListItemCrimeBinding
 
-class CrimeHolder (val binding: ListItemCrimeBinding) : RecyclerView.ViewHolder(binding.root) {
+class CrimeHolder (private val binding: ListItemCrimeBinding) : RecyclerView.ViewHolder(binding.root) {
 
+    fun bind(crime: Crime) {
+        binding.apply {
+            crimeTitle.text = crime.title
+            crimeDate.text = crime.date.toString()
+
+            root.setOnClickListener {
+                Toast.makeText(
+                    binding.root.context,
+                    "${crime.title} clicked!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
 }
 
 class CrimeListAdapter(private val crimes: List<Crime>): RecyclerView.Adapter<CrimeHolder>() {
@@ -23,10 +39,7 @@ class CrimeListAdapter(private val crimes: List<Crime>): RecyclerView.Adapter<Cr
 
     override fun onBindViewHolder (holder: CrimeHolder, position: Int) {
         val crime = crimes[position]
-        holder.apply {
-            binding.crimeTitle.text = crime.title
-            binding.crimeDate.text = crime.date.toString()
-        }
+        holder.bind(crime)
     }
 
     override fun getItemCount() = crimes.size
