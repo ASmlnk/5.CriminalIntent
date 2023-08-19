@@ -1,6 +1,7 @@
 package com.bignerdranch.android.a5criminalintent
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
@@ -15,6 +16,8 @@ class CrimeHolder(private val binding: ListItemCrimeBinding) :
         binding.apply {
             crimeTitle.text = crime.title
             crimeDate.text = crime.date.toString()
+
+            crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
 
             root.setOnClickListener {
                 Toast.makeText(
@@ -34,6 +37,9 @@ class CrimeHolderPolice(private val binding: ListItemCrimePoliceBinding) :
         binding.apply {
             crimeTitle.text = crime.title
             crimeDate.text = crime.date.toString()
+
+            crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
+
             crimePolice.setOnClickListener {
                 Toast.makeText(
                     binding.root.context,
