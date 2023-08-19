@@ -1,5 +1,6 @@
 package com.bignerdranch.android.a5criminalintent
 
+import android.icu.text.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +14,15 @@ class CrimeHolder(private val binding: ListItemCrimeBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(crime: Crime) {
+
+        val dateFormat = DateFormat.getPatternInstance(DateFormat.WEEKDAY).format(crime.date) +
+                ", " + DateFormat.getPatternInstance(DateFormat.DAY).format(crime.date) + " " +
+                DateFormat.getPatternInstance(DateFormat.MONTH).format(crime.date) + " " +
+                DateFormat.getPatternInstance(DateFormat.YEAR).format(crime.date)
+
         binding.apply {
             crimeTitle.text = crime.title
-            crimeDate.text = crime.date.toString()
+            crimeDate.text = dateFormat                         //crime.date.toString()
 
             crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
 
@@ -34,9 +41,15 @@ class CrimeHolderPolice(private val binding: ListItemCrimePoliceBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(crime: Crime) {
+
+        val dateFormat = DateFormat.getPatternInstance(DateFormat.WEEKDAY).format(crime.date) +
+                ", " + DateFormat.getPatternInstance(DateFormat.DAY).format(crime.date) + " " +
+                DateFormat.getPatternInstance(DateFormat.MONTH).format(crime.date) + " " +
+                DateFormat.getPatternInstance(DateFormat.YEAR).format(crime.date)
+
         binding.apply {
             crimeTitle.text = crime.title
-            crimeDate.text = crime.date.toString()
+            crimeDate.text = dateFormat                                   //crime.date.toString()
 
             crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
 
