@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.a5criminalintent.databinding.ListItemCrimeBinding
 import com.bignerdranch.android.a5criminalintent.databinding.ListItemCrimePoliceBinding
@@ -15,14 +14,9 @@ class CrimeHolder(private val binding: ListItemCrimeBinding) :
 
     fun bind(crime: Crime) {
 
-        val dateFormat = DateFormat.getPatternInstance(DateFormat.WEEKDAY).format(crime.date) +
-                ", " + DateFormat.getPatternInstance(DateFormat.DAY).format(crime.date) + " " +
-                DateFormat.getPatternInstance(DateFormat.MONTH).format(crime.date) + " " +
-                DateFormat.getPatternInstance(DateFormat.YEAR).format(crime.date)
-
         binding.apply {
             crimeTitle.text = crime.title
-            crimeDate.text = dateFormat                         //crime.date.toString()
+            crimeDate.text = dateFormat(crime)                        //crime.date.toString()
 
             crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
 
@@ -42,14 +36,10 @@ class CrimeHolderPolice(private val binding: ListItemCrimePoliceBinding) :
 
     fun bind(crime: Crime) {
 
-        val dateFormat = DateFormat.getPatternInstance(DateFormat.WEEKDAY).format(crime.date) +
-                ", " + DateFormat.getPatternInstance(DateFormat.DAY).format(crime.date) + " " +
-                DateFormat.getPatternInstance(DateFormat.MONTH).format(crime.date) + " " +
-                DateFormat.getPatternInstance(DateFormat.YEAR).format(crime.date)
-
         binding.apply {
             crimeTitle.text = crime.title
-            crimeDate.text = dateFormat                                   //crime.date.toString()
+            crimeDate.text =
+                dateFormat(crime)                                   //crime.date.toString()
 
             crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
 
@@ -113,3 +103,11 @@ class CrimeListAdapter(private val crimes: List<Crime>) :
 
     override fun getItemCount() = crimes.size
 }
+
+private fun dateFormat (crime: Crime) =
+            DateFormat.getPatternInstance(DateFormat.WEEKDAY).format(crime.date) +
+            ", " +
+            DateFormat.getPatternInstance(DateFormat.DAY).format(crime.date) +
+            " " +
+            DateFormat.getPatternInstance(DateFormat.MONTH + DateFormat.YEAR).format(crime.date)
+
