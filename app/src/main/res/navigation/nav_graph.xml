@@ -18,5 +18,9 @@
         android:id="@+id/crimeDetailFragment"
         android:name="com.bignerdranch.android.a5criminalintent.CrimeDetailFragment"
         tools:layout="@layout/fragment_crime_detail"
-        android:label="CrimeDetailFragment" />
+        android:label="CrimeDetailFragment" >
+        <argument
+            android:name="crimeId"
+            app:argType="java.util.UUID" />
+    </fragment>
 </navigation>

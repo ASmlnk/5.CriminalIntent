@@ -8,11 +8,13 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.a5criminalintent.databinding.ListItemCrimeBinding
 import com.bignerdranch.android.a5criminalintent.databinding.ListItemCrimePoliceBinding
+import java.util.*
 
 class CrimeHolder(private val binding: ListItemCrimeBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(crime: Crime) {
+    fun bind(crime: Crime, onCrimeClicked: (crimeId:UUID) -> Unit) {  //лямда для вызова функции NavController
+                                                            // перехода к следующему фрагменту
 
         binding.apply {
             crimeTitle.text = crime.title
@@ -21,11 +23,12 @@ class CrimeHolder(private val binding: ListItemCrimeBinding) :
             crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
 
             root.setOnClickListener {
-                Toast.makeText(
+                onCrimeClicked(crime.id)
+                /*Toast.makeText(
                     binding.root.context,
                     "${crime.title} clicked!",
                     Toast.LENGTH_SHORT
-                ).show()
+                ).show()*/
             }
         }
     }
@@ -34,7 +37,7 @@ class CrimeHolder(private val binding: ListItemCrimeBinding) :
 class CrimeHolderPolice(private val binding: ListItemCrimePoliceBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(crime: Crime) {
+    fun bind(crime: Crime, onCrimeClicked:(crimeId:UUID) -> Unit) {
 
         binding.apply {
             crimeTitle.text = crime.title
@@ -44,11 +47,12 @@ class CrimeHolderPolice(private val binding: ListItemCrimePoliceBinding) :
             crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
 
             crimePolice.setOnClickListener {
-                Toast.makeText(
+                onCrimeClicked(crime.id)
+                /*Toast.makeText(
                     binding.root.context,
                     "The police went to you",
                     Toast.LENGTH_LONG
-                ).show()
+                ).show()*/
             }
 
             root.setOnClickListener {
@@ -62,7 +66,10 @@ class CrimeHolderPolice(private val binding: ListItemCrimePoliceBinding) :
     }
 }
 
-class CrimeListAdapter(private val crimes: List<Crime>) :
+class CrimeListAdapter(
+    private val crimes: List<Crime>,
+    private val onCrimeClicked: (crimeId:UUID) -> Unit
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val listItemCrime = 0
@@ -96,8 +103,8 @@ class CrimeListAdapter(private val crimes: List<Crime>) :
         val crime = crimes[position]
 
         when (holder) {
-            is CrimeHolder -> holder.bind(crime)
-            is CrimeHolderPolice -> holder.bind(crime)
+            is CrimeHolder -> holder.bind(crime, onCrimeClicked)
+            is CrimeHolderPolice -> holder.bind(crime, onCrimeClicked)
         }
     }
 
