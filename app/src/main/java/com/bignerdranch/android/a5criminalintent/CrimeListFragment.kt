@@ -25,7 +25,7 @@ class CrimeListFragment : Fragment() {
 
     private val crimeListViewModel: CrimeListViewModel by viewModels()
 
-   // private var job: Job? = null
+    // private var job: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +39,7 @@ class CrimeListFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view:View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.vrt.setOnClickListener {
@@ -53,16 +53,14 @@ class CrimeListFragment : Fragment() {
                     binding.crimeRecyclerView.adapter = CrimeListAdapter(crimes) { crimeid ->
                         findNavController().navigate(
                             /*R.id.show_crime_detail*/
-                        CrimeListFragmentDirections.showCrimeDetail(crimeid)
+                            CrimeListFragmentDirections.showCrimeDetail(crimeid)
                         )     //лямда для вызова функции NavController
-                                                                                // перехода к следующему фрагменту
+                        // перехода к следующему фрагменту
                     }
-
                 }
             }
         }
     }
-
 
 
     override fun onDestroyView() {
@@ -79,7 +77,6 @@ class CrimeListFragment : Fragment() {
 
     return binding.root
 }*/
-
 
 
 /*

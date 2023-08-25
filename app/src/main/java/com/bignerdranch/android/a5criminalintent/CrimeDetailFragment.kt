@@ -4,26 +4,29 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import com.bignerdranch.android.a5criminalintent.databinding.FragmentCrimeDetailBinding
 import kotlinx.coroutines.launch
 import java.util.*
 
-class CrimeDetailFragment: Fragment() {
+class CrimeDetailFragment : Fragment() {
 
-   // private lateinit var binding: FragmentCrimeDetailBinding
+    // private lateinit var binding: FragmentCrimeDetailBinding
 
     private var _binding: FragmentCrimeDetailBinding? = null
     private val binding
-    get() = checkNotNull(_binding) {  //получение не нулевого значения _binding
-        "не удается получить доступ к binding, поскольку она равна null. Виден ли вид"
-    }
+        get() = checkNotNull(_binding) {  //получение не нулевого значения _binding
+            "не удается получить доступ к binding, поскольку она равна null. Виден ли вид"
+        }
 
     //private lateinit var crime: Crime
 
@@ -33,22 +36,23 @@ class CrimeDetailFragment: Fragment() {
         CrimeDetailViewModelFactory(args.crimeId)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        /*crime = Crime(
+        crime = Crime(
             id = UUID.randomUUID(),
             title = "",
             date = Date(),
             isSolved = false,
             isPolice = false
-        )*/
-    }
+        )
+    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?) : View? {
+        savedInstanceState: Bundle?
+    ): View? {
 
         _binding = FragmentCrimeDetailBinding.inflate(layoutInflater, container, false)
 
@@ -80,6 +84,19 @@ class CrimeDetailFragment: Fragment() {
             }
         }
 
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.crimeTitle.text.isNullOrBlank()) {
+                    Toast.makeText(context, "Нужно ввести название преступления", Toast.LENGTH_LONG)
+                        .show()
+                } else {
+                    NavHostFragment.findNavController(this@CrimeDetailFragment).navigateUp()
+                }
+            }
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 crimeDetailViewModel.crime.collect { crime ->
@@ -105,5 +122,4 @@ class CrimeDetailFragment: Fragment() {
             crimeSolved.isChecked = crime.isSolved
         }
     }
-
 }

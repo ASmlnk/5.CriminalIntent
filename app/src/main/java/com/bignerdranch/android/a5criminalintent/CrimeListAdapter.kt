@@ -13,8 +13,11 @@ import java.util.*
 class CrimeHolder(private val binding: ListItemCrimeBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(crime: Crime, onCrimeClicked: (crimeId:UUID) -> Unit) {  //лямда для вызова функции NavController
-                                                            // перехода к следующему фрагменту
+    fun bind(
+        crime: Crime,
+        onCrimeClicked: (crimeId: UUID) -> Unit
+    ) {  //лямда для вызова функции NavController
+        // перехода к следующему фрагменту
 
         binding.apply {
             crimeTitle.text = crime.title
@@ -37,7 +40,7 @@ class CrimeHolder(private val binding: ListItemCrimeBinding) :
 class CrimeHolderPolice(private val binding: ListItemCrimePoliceBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(crime: Crime, onCrimeClicked:(crimeId:UUID) -> Unit) {
+    fun bind(crime: Crime, onCrimeClicked: (crimeId: UUID) -> Unit) {
 
         binding.apply {
             crimeTitle.text = crime.title
@@ -68,7 +71,7 @@ class CrimeHolderPolice(private val binding: ListItemCrimePoliceBinding) :
 
 class CrimeListAdapter(
     private val crimes: List<Crime>,
-    private val onCrimeClicked: (crimeId:UUID) -> Unit
+    private val onCrimeClicked: (crimeId: UUID) -> Unit
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -111,8 +114,8 @@ class CrimeListAdapter(
     override fun getItemCount() = crimes.size
 }
 
-private fun dateFormat (crime: Crime) =
-            DateFormat.getPatternInstance(DateFormat.WEEKDAY).format(crime.date) +
+private fun dateFormat(crime: Crime) =
+    DateFormat.getPatternInstance(DateFormat.WEEKDAY).format(crime.date) +
             ", " +
             DateFormat.getPatternInstance(DateFormat.DAY).format(crime.date) +
             " " +
