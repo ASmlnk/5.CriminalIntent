@@ -42,6 +42,10 @@ class CrimeListFragment : Fragment() {
     override fun onViewCreated(view:View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.vrt.setOnClickListener {
+            findNavController().navigate(R.id.action_crimeListFragment_to_newd)
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
