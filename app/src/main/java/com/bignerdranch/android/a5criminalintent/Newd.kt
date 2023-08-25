@@ -38,3 +38,25 @@ class Newd: Fragment() {
         _binding = null
     }
 }
+
+/*
+Обеспечение пользовательской обратной навигации путем обработки onBackPressed теперь стало проще благодаря обратным вызовам внутри фрагмента.
+
+class MyFragment : Fragment() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (true == conditionForCustomAction) {
+                    myCustomActionHere()
+                } else  NavHostFragment.findNavController(this@MyFragment).navigateUp();
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this, onBackPressedCallback
+        )
+        ...
+    }
+    Если вы хотите, чтобы действие возврата по умолчанию основывалось на каком-либо условии, вы можете использовать:
+
+    NavHostFragment.findNavController(this@MyFragment).navigateUp();*/
