@@ -33,17 +33,17 @@ class CrimeDetailFragment: Fragment() {
         CrimeDetailViewModelFactory(args.crimeId)
     }
 
-    /*override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        crime = Crime(
+        /*crime = Crime(
             id = UUID.randomUUID(),
             title = "",
             date = Date(),
             isSolved = false,
             isPolice = false
-        )
-    }*/
+        )*/
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

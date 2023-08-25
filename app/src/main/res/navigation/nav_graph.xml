@@ -13,6 +13,9 @@
         <action
             android:id="@+id/show_crime_detail"
             app:destination="@id/crimeDetailFragment" />
+        <action
+            android:id="@+id/action_crimeListFragment_to_newd"
+            app:destination="@id/newd" />
     </fragment>
     <fragment
         android:id="@+id/crimeDetailFragment"
@@ -23,4 +26,8 @@
             android:name="crimeId"
             app:argType="java.util.UUID" />
     </fragment>
+    <fragment
+        android:id="@+id/newd"
+        android:name="com.bignerdranch.android.a5criminalintent.Newd"
+        android:label="Newd" />
 </navigation>
