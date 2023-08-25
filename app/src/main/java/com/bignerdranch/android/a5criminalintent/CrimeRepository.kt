@@ -3,12 +3,18 @@ package com.bignerdranch.android.a5criminalintent
 import android.content.Context
 import androidx.room.Room
 import com.bignerdranch.android.a5criminalintent.DataBase.CrimeDataBase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import java.util.*
 
 private const val DATABASE_NAME = "crime-database"
 
-class CrimeRepository private constructor(context: Context) {
+class CrimeRepository private constructor(
+    context: Context,
+    private val coroutineScope: CoroutineScope = GlobalScope
+) {
 
     private val database: CrimeDataBase = Room
         .databaseBuilder(
@@ -19,7 +25,14 @@ class CrimeRepository private constructor(context: Context) {
         .build()
 
     fun getCrimes(): Flow<List<Crime>> = database.crimeDao().getCrimes()
+
     suspend fun getCrime(id: UUID): Crime = database.crimeDao().getCrime(id)
+
+    fun updateCrime(crime: Crime) {
+        coroutineScope.launch {
+            database.crimeDao().updateCrime(crime)
+        }
+    }
 
     companion object {
         private var INSTANCE: CrimeRepository? = null
@@ -31,8 +44,7 @@ class CrimeRepository private constructor(context: Context) {
         }
 
         fun get(): CrimeRepository {
-            return INSTANCE ?:
-            throw IllegalStateException("CrimeRepository must be initialized")
+            return INSTANCE ?: throw IllegalStateException("CrimeRepository must be initialized")
         }
     }
 }
