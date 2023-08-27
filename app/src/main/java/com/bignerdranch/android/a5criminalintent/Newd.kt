@@ -6,11 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.NavHostFragment
-
+import androidx.navigation.fragment.findNavController
 import com.bignerdranch.android.a5criminalintent.databinding.NewdBinding
+import java.util.*
 
 class Newd : Fragment() {
     private var _binding: NewdBinding? = null
@@ -20,6 +23,21 @@ class Newd : Fragment() {
         }
 
     private var x = ""
+    private lateinit var crime: Crime
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        crime = Crime(
+            id = UUID.randomUUID(),
+            title = "",
+            date = Date(),
+            isSolved = true,
+            isPolice = false
+        )
+
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,9 +50,17 @@ class Newd : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.ctitle.doOnTextChanged { text, _, _, _ ->
-            x = text.toString()
+        binding.apply {
+            ctitle.doOnTextChanged { text, _, _, _ ->
+                x = text.toString()
 
+            }
+
+            date.setOnClickListener {
+                findNavController().navigate(
+                    NewdDirections.actionNewdToDatePickerFragment(crime.date)
+                )
+            }
         }
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -48,13 +74,30 @@ class Newd : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(
             this, onBackPressedCallback
         )
+
+        setFragmentResultListener(
+            DatePickerFragment.REQUEST_KEY_DATE
+        ) { _, bundle ->
+            val newDate = bundle.getSerializable(DatePickerFragment.BUNDLE_KEY_DATE) as Date
+            updateUi(newDate)
+
+        }
+
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    fun updateUi(date: Date) {
+        binding.apply {
+            textDate.text = date.toString()
+        }
+    }
 }
+
 
 /*
 Обеспечение пользовательской обратной навигации путем обработки onBackPressed теперь стало проще благодаря обратным вызовам внутри фрагмента.

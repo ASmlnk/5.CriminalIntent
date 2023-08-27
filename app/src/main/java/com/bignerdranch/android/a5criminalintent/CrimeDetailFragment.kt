@@ -8,11 +8,14 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bignerdranch.android.a5criminalintent.databinding.FragmentCrimeDetailBinding
 import kotlinx.coroutines.launch
@@ -71,10 +74,10 @@ class CrimeDetailFragment : Fragment() {
                 }
             }
 
-            crimeDate.apply {
-                /*text = crime.date.toString()*/
+            /*crimeDate.apply {
+                *//*text = crime.date.toString()*//*
                 isEnabled = false
-            }
+            }*/
 
             crimeSolved.setOnCheckedChangeListener { _, isChecked ->
                 /*crime = crime.copy(isSolved = isChecked)*/
@@ -105,6 +108,14 @@ class CrimeDetailFragment : Fragment() {
                     }
                 }
             }
+            setFragmentResultListener(
+                DatePickerFragment.REQUEST_KEY_DATE
+            ) { _, bundle ->
+                val newDate = bundle.getSerializable(DatePickerFragment.BUNDLE_KEY_DATE) as Date
+                crimeDetailViewModel.updateCrime {
+                    it.copy(date = newDate)
+                }
+            }
         }
     }
 
@@ -120,6 +131,11 @@ class CrimeDetailFragment : Fragment() {
             }
             crimeDate.text = crime.date.toString()
             crimeSolved.isChecked = crime.isSolved
+            crimeDate.setOnClickListener {
+                findNavController().navigate(
+                    CrimeDetailFragmentDirections.selectDate(crime.date)
+                )
+            }
         }
     }
 }
