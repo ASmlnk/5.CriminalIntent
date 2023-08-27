@@ -60,6 +60,7 @@ class Newd : Fragment() {
                 findNavController().navigate(
                     NewdDirections.actionNewdToDatePickerFragment(crime.date)
                 )
+
             }
 
             time.setOnClickListener {
@@ -85,13 +86,15 @@ class Newd : Fragment() {
             DatePickerFragment.REQUEST_KEY_DATE
         ) { _, bundle ->
             val newDate = bundle.getSerializable(DatePickerFragment.BUNDLE_KEY_DATE) as Date
-            updateUi(newDate)
+            crime = crime.copy(date = newDate)
+            updateUi(crime)
 
         }
 
         setFragmentResultListener(TimePickerFragment.REQUEST_KEY_TIME) { _, bundle ->
             val s = bundle.getSerializable(TimePickerFragment.BUNDLE_KEY_TIME) as Date
-            updateUi(s)
+            crime = crime.copy(date = s)
+            updateUi(crime)
 
         }
 
@@ -103,9 +106,9 @@ class Newd : Fragment() {
         _binding = null
     }
 
-    fun updateUi(date: Date) {
+    fun updateUi(crime: Crime) {
         binding.apply {
-            textDate.text = date.toString()
+            textDate.text = crime.date.toString()
         }
     }
 

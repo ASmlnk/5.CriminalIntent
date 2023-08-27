@@ -15,8 +15,11 @@ class TimePickerFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
+        val calendar = GregorianCalendar.getInstance()
+
         val timeListener = TimePickerDialog.OnTimeSetListener { _, hour: Int, minute: Int ->
-            val resultTime = GregorianCalendar.getInstance()
+            calendar.time = args.crimeDate
+            val resultTime = calendar
             resultTime.set(Calendar.HOUR, hour)
             resultTime.set(Calendar.MINUTE, minute)
             val resul = resultTime.time
@@ -24,8 +27,8 @@ class TimePickerFragment : DialogFragment() {
 
         }
 
-        val calendar = GregorianCalendar.getInstance()
-        calendar.time = args.crimeDate
+
+
         val hour = calendar.get(Calendar.HOUR)
         val minute = calendar.get(Calendar.MINUTE)
 
