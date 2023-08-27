@@ -36,11 +36,22 @@
         <action
             android:id="@+id/action_newd_to_datePickerFragment"
             app:destination="@id/datePickerFragment" />
+        <action
+            android:id="@+id/action_newd_to_timePickerFragment"
+            app:destination="@id/timePickerFragment" />
     </fragment>
     <dialog
         android:id="@+id/datePickerFragment"
         android:name="com.bignerdranch.android.a5criminalintent.DatePickerFragment"
         android:label="DatePickerFragment" >
+        <argument
+            android:name="crimeDate"
+            app:argType="java.util.Date" />
+    </dialog>
+    <dialog
+        android:id="@+id/timePickerFragment"
+        android:name="com.bignerdranch.android.a5criminalintent.TimePickerFragment"
+        android:label="TimePickerFragment" >
         <argument
             android:name="crimeDate"
             app:argType="java.util.Date" />

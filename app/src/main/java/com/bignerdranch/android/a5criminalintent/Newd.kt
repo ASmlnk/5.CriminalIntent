@@ -61,6 +61,12 @@ class Newd : Fragment() {
                     NewdDirections.actionNewdToDatePickerFragment(crime.date)
                 )
             }
+
+            time.setOnClickListener {
+                findNavController().navigate(
+                    NewdDirections.actionNewdToTimePickerFragment(crime.date)
+                )
+            }
         }
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -83,6 +89,12 @@ class Newd : Fragment() {
 
         }
 
+        setFragmentResultListener(TimePickerFragment.REQUEST_KEY_TIME) { _, bundle ->
+            val s = bundle.getSerializable(TimePickerFragment.BUNDLE_KEY_TIME) as Date
+            updateUi(s)
+
+        }
+
     }
 
 
@@ -96,6 +108,8 @@ class Newd : Fragment() {
             textDate.text = date.toString()
         }
     }
+
+
 }
 
 
