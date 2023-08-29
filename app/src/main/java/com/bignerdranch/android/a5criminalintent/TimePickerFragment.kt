@@ -19,20 +19,16 @@ class TimePickerFragment : DialogFragment() {
 
         val timeListener = TimePickerDialog.OnTimeSetListener { _, hour: Int, minute: Int ->
             calendar.time = args.crimeDate
-            val resultTime = calendar
-            resultTime.set(Calendar.HOUR, hour)
-            resultTime.set(Calendar.MINUTE, minute)
-            val resul = resultTime.time
-            setFragmentResult(REQUEST_KEY_TIME, bundleOf(BUNDLE_KEY_TIME to resul))
+            val resultTime = calendar.apply {
+                set(Calendar.HOUR, hour)
+                set(Calendar.MINUTE, minute)
+            }.time
 
+            setFragmentResult(REQUEST_KEY_TIME, bundleOf(BUNDLE_KEY_TIME to resultTime))
         }
-
-
 
         val hour = calendar.get(Calendar.HOUR)
         val minute = calendar.get(Calendar.MINUTE)
-
-
 
         return TimePickerDialog(
             requireContext(),
@@ -47,5 +43,4 @@ class TimePickerFragment : DialogFragment() {
         const val REQUEST_KEY_TIME = "REQUEST_KEY_TIME"
         const val BUNDLE_KEY_TIME = "BUNDLE_KEY_TIME"
     }
-
 }

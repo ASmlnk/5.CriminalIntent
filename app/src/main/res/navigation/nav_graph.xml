@@ -28,6 +28,9 @@
         <action
             android:id="@+id/select_date"
             app:destination="@id/datePickerFragment" />
+        <action
+            android:id="@+id/select_time"
+            app:destination="@id/timePickerFragment" />
     </fragment>
     <fragment
         android:id="@+id/newd"

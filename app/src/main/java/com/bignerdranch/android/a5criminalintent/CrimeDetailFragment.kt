@@ -17,6 +17,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bignerdranch.android.a5criminalintent.TimePickerFragment.Companion.BUNDLE_KEY_TIME
 import com.bignerdranch.android.a5criminalintent.databinding.FragmentCrimeDetailBinding
 import kotlinx.coroutines.launch
 import java.util.*
@@ -116,6 +117,15 @@ class CrimeDetailFragment : Fragment() {
                     it.copy(date = newDate)
                 }
             }
+
+            setFragmentResultListener(
+                TimePickerFragment.REQUEST_KEY_TIME
+            ) {_, bundle ->
+                val newDate = bundle.getSerializable(TimePickerFragment.BUNDLE_KEY_TIME) as Date
+                crimeDetailViewModel.updateCrime {
+                    it.copy(date = newDate)
+                }
+            }
         }
     }
 
@@ -134,6 +144,11 @@ class CrimeDetailFragment : Fragment() {
             crimeDate.setOnClickListener {
                 findNavController().navigate(
                     CrimeDetailFragmentDirections.selectDate(crime.date)
+                )
+            }
+            crimeTime.setOnClickListener {
+                findNavController().navigate(
+                    CrimeDetailFragmentDirections.selectTime(crime.date)
                 )
             }
         }
