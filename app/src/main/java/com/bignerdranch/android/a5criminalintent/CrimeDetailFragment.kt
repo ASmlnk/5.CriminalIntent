@@ -1,6 +1,7 @@
 package com.bignerdranch.android.a5criminalintent
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -105,26 +106,26 @@ class CrimeDetailFragment : Fragment() {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 crimeDetailViewModel.crime.collect { crime ->
                     crime?.let {
-                        updateUi(crime)
+                        updateUi(it)
                     }
                 }
             }
-            setFragmentResultListener(
-                DatePickerFragment.REQUEST_KEY_DATE
-            ) { _, bundle ->
-                val newDate = bundle.getSerializable(DatePickerFragment.BUNDLE_KEY_DATE) as Date
-                crimeDetailViewModel.updateCrime {
-                    it.copy(date = newDate)
-                }
+        }
+        setFragmentResultListener(
+            DatePickerFragment.REQUEST_KEY_DATE
+        ) { _, bundle ->
+            val newDate = bundle.getSerializable(DatePickerFragment.BUNDLE_KEY_DATE) as Date
+            crimeDetailViewModel.updateCrime {
+                it.copy(date = newDate)
             }
+        }
 
-            setFragmentResultListener(
-                TimePickerFragment.REQUEST_KEY_TIME
-            ) {_, bundle ->
-                val newDate = bundle.getSerializable(TimePickerFragment.BUNDLE_KEY_TIME) as Date
-                crimeDetailViewModel.updateCrime {
-                    it.copy(date = newDate)
-                }
+        setFragmentResultListener(
+            TimePickerFragment.REQUEST_KEY_TIME
+        ) { _, bundle ->
+            val newTime = bundle.getSerializable(TimePickerFragment.BUNDLE_KEY_TIME) as Date
+            crimeDetailViewModel.updateCrime {
+                it.copy(date = newTime)
             }
         }
     }
