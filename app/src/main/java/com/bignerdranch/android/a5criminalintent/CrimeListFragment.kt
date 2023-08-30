@@ -1,13 +1,20 @@
 package com.bignerdranch.android.a5criminalintent
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.*
+import android.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bignerdranch.android.a5criminalintent.databinding.FragmentCrimeListBinding
 import kotlinx.coroutines.launch
@@ -24,13 +31,19 @@ class CrimeListFragment : Fragment() {
 
     private val crimeListViewModel: CrimeListViewModel by viewModels()
 
+
+
     // private var job: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-    }
 
+        val a = activity as AppCompatActivity
+        val aa = a.supportActionBar
+        aa?.setTitle(R.string.new_crime)
+
+    }
 
 
     override fun onCreateView(
@@ -40,9 +53,8 @@ class CrimeListFragment : Fragment() {
     ): View? {
 
         _binding = FragmentCrimeListBinding.inflate(inflater, container, false)
+      //  binding.crimeRecyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         binding.crimeRecyclerView.layoutManager = LinearLayoutManager(context)
-
-
 
         return binding.root
     }
@@ -53,6 +65,7 @@ class CrimeListFragment : Fragment() {
         binding.vrt.setOnClickListener {
             findNavController().navigate(R.id.action_crimeListFragment_to_newd)
         }
+        binding.vrt.isVisible = false
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -69,7 +82,6 @@ class CrimeListFragment : Fragment() {
             }
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -138,81 +150,81 @@ override fun onStop() {
 }*/
 
 
-        /*                          Activity
-        class MainActivity : AppCompatActivity() {
+/*                          Activity
+class MainActivity : AppCompatActivity() {
 
-            override fun onCreate(savedInstanceState: Bundle?) {
-                super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-                addMenuProvider(object : MenuProvider {
-                    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                        menuInflater.inflate(R.menu.main_menu, menu)
-                    }
-
-                    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                        // Handle the menu selection
-                        return true
-                    }
-                })
-            }
-        }
-                                        Fragment
-        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-            // The usage of an interface lets you inject your own implementation
-            val menuHost: MenuHost = requireActivity()
-
-            menuHost.addMenuProvider(object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    // Add menu items here
-                    menuInflater.inflate(R.menu.main_menu, menu)
-                }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    // Handle the menu selection
-                    return when (menuItem.itemId) {
-                        R.id.action_menu1 -> {
-                            // todo menu1
-                            true
-                        }
-                        R.id.action_menu2 -> {
-                            // todo menu2
-                            true
-                        }
-                        else -> false
-                    }
-                }
-            }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        }
-                                    PreferenceFragmentCompat
-        val menuHost: MenuHost = requireHost() as MenuHost
-        //Same declaration with Fragment
-
-                                    Use MenuProvider interface
-        class FirstFragment : Fragment(), MenuProvider {
-
-            override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-                val menuHost: MenuHost = requireActivity()
-                menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-            }
-
+        addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                // Add menu items here
-                menuInflater.inflate(R.menu.second_menu, menu)
+                menuInflater.inflate(R.menu.main_menu, menu)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 // Handle the menu selection
-                return when (menuItem.itemId) {
-                    R.id.menu_clear -> {
-                        // Do stuff...
-                        true
-                    }
-                    R.id.menu_refresh -> {
-                        // Do stuff...
-                        true
-                    }
-                    else -> false
+                return true
+            }
+        })
+    }
+}
+                                Fragment
+override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+    // The usage of an interface lets you inject your own implementation
+    val menuHost: MenuHost = requireActivity()
+
+    menuHost.addMenuProvider(object : MenuProvider {
+        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            // Add menu items here
+            menuInflater.inflate(R.menu.main_menu, menu)
+        }
+
+        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+            // Handle the menu selection
+            return when (menuItem.itemId) {
+                R.id.action_menu1 -> {
+                    // todo menu1
+                    true
                 }
-            }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        }*/
+                R.id.action_menu2 -> {
+                    // todo menu2
+                    true
+                }
+                else -> false
+            }
+        }
+    }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+}
+                            PreferenceFragmentCompat
+val menuHost: MenuHost = requireHost() as MenuHost
+//Same declaration with Fragment
+
+                            Use MenuProvider interface
+class FirstFragment : Fragment(), MenuProvider {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        // Add menu items here
+        menuInflater.inflate(R.menu.second_menu, menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        // Handle the menu selection
+        return when (menuItem.itemId) {
+            R.id.menu_clear -> {
+                // Do stuff...
+                true
+            }
+            R.id.menu_refresh -> {
+                // Do stuff...
+                true
+            }
+            else -> false
+        }
+    }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+}*/

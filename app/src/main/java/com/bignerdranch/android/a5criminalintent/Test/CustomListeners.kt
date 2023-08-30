@@ -1,0 +1,11 @@
+package com.bignerdranch.android.a5criminalintent.Test
+
+interface CustomListeners {
+
+    fun onClick(item: CustomViewModel, position: Int)
+
+    fun onLongClick(item: CustomViewModel, position: Int)
+
+    fun onItemMoved(item: CustomViewModel, fromPosition: Int, toPosition: Int)
+
+}
