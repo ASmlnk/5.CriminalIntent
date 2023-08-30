@@ -65,7 +65,7 @@ class CrimeListFragment : Fragment() {
         binding.vrt.setOnClickListener {
             findNavController().navigate(R.id.action_crimeListFragment_to_newd)
         }
-        binding.vrt.isVisible = false
+        //binding.vrt.isVisible = false
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
