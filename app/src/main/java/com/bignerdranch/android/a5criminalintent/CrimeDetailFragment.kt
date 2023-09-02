@@ -87,6 +87,12 @@ class CrimeDetailFragment : Fragment() {
                     oldCrime.copy(isSolved = isChecked)
                 }
             }
+
+            crimePolice.setOnCheckedChangeListener { _, isChecked ->
+                crimeDetailViewModel.updateCrime { oldCrime ->
+                    oldCrime.copy(isPolice = isChecked)
+                }
+            }
         }
 
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
