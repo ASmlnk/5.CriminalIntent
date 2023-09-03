@@ -1,5 +1,6 @@
 package com.bignerdranch.android.a5criminalintent
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.view.*
@@ -56,7 +57,7 @@ class CrimeListFragment : Fragment() {
     ): View? {
 
         _binding = FragmentCrimeListBinding.inflate(inflater, container, false)
-         binding.crimeRecyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+         //binding.crimeRecyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         binding.crimeRecyclerView.layoutManager = LinearLayoutManager(context)
 
         return binding.root
@@ -69,6 +70,16 @@ class CrimeListFragment : Fragment() {
             findNavController().navigate(R.id.action_crimeListFragment_to_newd)
         }
         //binding.vrt.isVisible = false
+        val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(binding.crimeRecyclerView) {
+            @SuppressLint("ResourceType")
+            override fun instantiateUnderlayButton(position: Int): List<UnderlayButton> {
+
+                val deleteButton = deleteButton(position)
+                val buttons = listOf<UnderlayButton>(deleteButton)
+                return buttons
+            }
+        })
+        itemTouchHelper.attachToRecyclerView(binding.crimeRecyclerView)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -81,19 +92,13 @@ class CrimeListFragment : Fragment() {
                         )     //лямда для вызова функции NavController
                         // перехода к следующему фрагменту
 
+
                     }
                 }
             }
         }
 
-        val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(binding.crimeRecyclerView) {
-            override fun instantiateUnderlayButton(position: Int): List<UnderlayButton> {
 
-                val deleteButton = deleteButton(position)
-                val buttons = listOf<UnderlayButton>(deleteButton)
-                return buttons
-            }
-        })
         /*itemTouchHelper = ItemTouchHelper(object :ItemTouchHelper.SimpleCallback(
             0,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
@@ -112,9 +117,6 @@ class CrimeListFragment : Fragment() {
             }
 
         })*/
-
-        itemTouchHelper.attachToRecyclerView(binding.crimeRecyclerView)
-
 
     }
 

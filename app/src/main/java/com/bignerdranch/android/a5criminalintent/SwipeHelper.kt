@@ -3,6 +3,7 @@ package com.bignerdranch.android.a5criminalintent
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorRes
@@ -14,8 +15,9 @@ import kotlin.math.abs
 import kotlin.math.max
 
 
+@SuppressLint("ClickableViewAccessibility")
 abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHelper.SimpleCallback(
-    ItemTouchHelper.ACTION_STATE_IDLE,
+          0,      //ItemTouchHelper.ACTION_STATE_IDLE,
     ItemTouchHelper.LEFT
 ) {
     private var swipedPosition = -1
@@ -44,7 +46,8 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
     private fun recoverSwipedItem() {
         while (!recoverQueue.isEmpty()) {
             val position = recoverQueue.poll() ?: return
-            recyclerView.adapter?.notifyItemChanged(position)
+            //recyclerView.adapter?.notifyItemChanged(position)
+            Log.i("REC","$position")
         }
     }
 
@@ -64,6 +67,8 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
             )
             right = left.toInt()
         }
+
+
     }
 
     override fun onChildDraw(
@@ -80,7 +85,7 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
         val itemView = viewHolder.itemView
 
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            if (dX < 0 ) {
+            if (dX < 0) {
                 if (!buttonsBuffer.containsKey(position)) {
                     buttonsBuffer[position] = instantiateUnderlayButton(position)
                 }
@@ -88,9 +93,11 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
                 val buttons = buttonsBuffer[position] ?: return
                 if (buttons.isEmpty()) return
                 maxDX = max(-buttons.intrinsicWidth(), dX)
+
                 drawButtons(c, buttons, itemView, maxDX)
             }
         }
+
         super.onChildDraw(c, recyclerView, viewHolder, maxDX, dY, actionState, isCurrentlyActive)
     }
 
@@ -99,7 +106,7 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        return false
+        return true
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -125,7 +132,6 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
     ) {
         private var clickableRegion: RectF? = null
         private val textSizeInPixel: Float = textSize * context.resources.displayMetrics.density
-        private val ss = (context.resources.displayMetrics.widthPixels / context.resources.displayMetrics.density).toFloat()
         private val horizontalPadding = 50.0f
         val intrinsicWidth: Float
 
@@ -139,6 +145,21 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
             intrinsicWidth = titleBounds.width() + 2 * horizontalPadding
         }
 
+        @SuppressLint("UseCompatLoadingForDrawables")
+        fun draw2(canvas: Canvas, rect: RectF) {
+            val t = context.resources.getDrawable(R.drawable.ic_baseline_delete_24, null)
+
+            t.bounds = Rect(
+                rect.left.toInt()+40, rect.top.toInt()+70, rect.right.toInt()-40, rect.bottom.toInt()-70
+            )
+            Log.i("REC", "$rect")
+
+
+
+            t.draw(canvas)
+        }
+
+        @SuppressLint("UseCompatLoadingForDrawables")
         fun draw(canvas: Canvas, rect: RectF) {
             val paint = Paint()
 
@@ -157,6 +178,8 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
 
             val y = rect.height() / 2 + titleBounds.height() / 2 - titleBounds.bottom
             canvas.drawText(title, rect.left + horizontalPadding, rect.top + y, paint)
+            //draw2(canvas, rect)
+
 
             clickableRegion = rect
         }
@@ -175,5 +198,5 @@ private fun List<SwipeHelper.UnderlayButton>.intrinsicWidth(): Float {
     if (isEmpty()) return 0.0f
     return map {
         it.intrinsicWidth
-    }.reduce{acc, fl -> acc + fl}
+    }.reduce { acc, fl -> acc + fl }
 }
