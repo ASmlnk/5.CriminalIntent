@@ -17,7 +17,7 @@ import kotlin.math.max
 
 @SuppressLint("ClickableViewAccessibility")
 abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHelper.SimpleCallback(
-          0,      //ItemTouchHelper.ACTION_STATE_IDLE,
+    0,      //ItemTouchHelper.ACTION_STATE_IDLE,
     ItemTouchHelper.LEFT
 ) {
     private var swipedPosition = -1
@@ -34,8 +34,10 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
         if (swipedPosition < 0) return@OnTouchListener false
         buttonsBuffer[swipedPosition]?.forEach { it.handle(event) }
         recoverQueue.add(swipedPosition)
+        Log.i("REC", "$recoverQueue")
         swipedPosition = -1
         recoverSwipedItem()
+
         true
     }
 
@@ -47,7 +49,6 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
         while (!recoverQueue.isEmpty()) {
             val position = recoverQueue.poll() ?: return
             //recyclerView.adapter?.notifyItemChanged(position)
-            Log.i("REC","$position")
         }
     }
 
@@ -67,8 +68,6 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
             )
             right = left.toInt()
         }
-
-
     }
 
     override fun onChildDraw(
@@ -89,7 +88,7 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
                 if (!buttonsBuffer.containsKey(position)) {
                     buttonsBuffer[position] = instantiateUnderlayButton(position)
                 }
-
+                Log.i("REC1", "$buttonsBuffer")
                 val buttons = buttonsBuffer[position] ?: return
                 if (buttons.isEmpty()) return
                 maxDX = max(-buttons.intrinsicWidth(), dX)
@@ -106,7 +105,7 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        return true
+        return false
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -148,14 +147,15 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
         @SuppressLint("UseCompatLoadingForDrawables")
         fun draw2(canvas: Canvas, rect: RectF) {
             val t = context.resources.getDrawable(R.drawable.ic_baseline_delete_24, null)
+            val deltaTop = (rect.bottom - rect.top) / 3
+            val deltaLeft = (rect.right - rect.left) / 3
 
             t.bounds = Rect(
-                rect.left.toInt()+40, rect.top.toInt()+70, rect.right.toInt()-40, rect.bottom.toInt()-70
+                (rect.left + deltaLeft).toInt(),
+                (rect.top + deltaTop).toInt(),
+                (rect.right - deltaLeft).toInt(),
+                (rect.bottom - deltaTop).toInt()
             )
-            Log.i("REC", "$rect")
-
-
-
             t.draw(canvas)
         }
 
@@ -176,11 +176,24 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
             val titleBounds = Rect()
             paint.getTextBounds(title, 0, title.length, titleBounds)
 
-            val y = rect.height() / 2 + titleBounds.height() / 2 - titleBounds.bottom
+            //val y = rect.height() / 2 + titleBounds.height() / 2 - titleBounds.bottom
+            val iconDelete = context.resources.getDrawable(R.drawable.ic_baseline_delete_24, null)
+            val y =
+                rect.height() - (rect.height() - titleBounds.height() - iconDelete.intrinsicHeight) / 2
+
             canvas.drawText(title, rect.left + horizontalPadding, rect.top + y, paint)
-            //draw2(canvas, rect)
+            val yTop = (rect.height() - titleBounds.height() - iconDelete.intrinsicHeight) / 2
+            val yBottom = yTop + titleBounds.height()
+            val yLeft = (rect.width() - iconDelete.intrinsicWidth) / 2
 
-
+            iconDelete.bounds = Rect(
+                (rect.left + yLeft).toInt(),
+                (rect.top + yTop).toInt(),
+                (rect.right - yLeft).toInt(),
+                (rect.bottom - yBottom).toInt()
+            )
+            iconDelete.draw(canvas)
+            // draw2(canvas, rect)
             clickableRegion = rect
         }
 

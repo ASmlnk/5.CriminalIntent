@@ -50,20 +50,16 @@ class CrimeHolderPolice(private val binding: ListItemCrimePoliceBinding) :
             crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
 
             crimePolice.setOnClickListener {
-                onCrimeClicked(crime.id)
-                /*Toast.makeText(
+               // onCrimeClicked(crime.id)
+                Toast.makeText(
                     binding.root.context,
                     "The police went to you",
                     Toast.LENGTH_LONG
-                ).show()*/
+                ).show()
             }
 
             root.setOnClickListener {
-                Toast.makeText(
-                    binding.root.context,
-                    "${crime.title} clicked!",
-                    Toast.LENGTH_SHORT
-                ).show()
+                onCrimeClicked(crime.id)
             }
         }
     }

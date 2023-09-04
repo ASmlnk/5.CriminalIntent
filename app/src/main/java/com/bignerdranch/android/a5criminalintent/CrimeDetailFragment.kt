@@ -148,6 +148,7 @@ class CrimeDetailFragment : Fragment() {
             }
             crimeDate.text = crime.date.toString()
             crimeSolved.isChecked = crime.isSolved
+            crimePolice.isChecked = crime.isPolice
             crimeDate.setOnClickListener {
                 findNavController().navigate(
                     CrimeDetailFragmentDirections.selectDate(crime.date)

@@ -66,9 +66,10 @@ class CrimeListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.vrt.setOnClickListener {
-            findNavController().navigate(R.id.action_crimeListFragment_to_newd)
+        binding.addCrime.setOnClickListener {
+            showNewCrime()
         }
+
         //binding.vrt.isVisible = false
         val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(binding.crimeRecyclerView) {
             @SuppressLint("ResourceType")
@@ -91,8 +92,6 @@ class CrimeListFragment : Fragment() {
                             CrimeListFragmentDirections.showCrimeDetail(crimeid)
                         )     //лямда для вызова функции NavController
                         // перехода к следующему фрагменту
-
-
                     }
                 }
             }
@@ -148,10 +147,11 @@ class CrimeListFragment : Fragment() {
             R.color.recycler_view_background,
             object : SwipeHelper.UnderlayButtonClickListener {
                 override fun onClick() {
-                    Toast.makeText(context, "Delete", Toast.LENGTH_LONG).show()
+                    //Toast.makeText(context, "Delete", Toast.LENGTH_LONG).show()
+
+                    crimeListViewModel.deleteCrime()
                 }
             })
-
     }
 
     private fun showNewCrime() {
