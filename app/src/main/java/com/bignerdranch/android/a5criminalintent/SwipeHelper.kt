@@ -20,6 +20,7 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
     0,      //ItemTouchHelper.ACTION_STATE_IDLE,
     ItemTouchHelper.LEFT
 ) {
+
     private var swipedPosition = -1
     private val buttonsBuffer: MutableMap<Int, List<UnderlayButton>> = mutableMapOf()
     private val recoverQueue = object : LinkedList<Int>() {

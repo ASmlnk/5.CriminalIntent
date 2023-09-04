@@ -71,6 +71,7 @@ class CrimeListAdapter(
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+
     private val listItemCrime = 0
     private val listItemCrimePolice = 1
 

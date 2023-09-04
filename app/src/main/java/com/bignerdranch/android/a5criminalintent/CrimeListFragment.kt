@@ -82,6 +82,7 @@ class CrimeListFragment : Fragment() {
         })
         itemTouchHelper.attachToRecyclerView(binding.crimeRecyclerView)
 
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
@@ -148,6 +149,7 @@ class CrimeListFragment : Fragment() {
             object : SwipeHelper.UnderlayButtonClickListener {
                 override fun onClick() {
                     //Toast.makeText(context, "Delete", Toast.LENGTH_LONG).show()
+
 
                     crimeListViewModel.deleteCrime()
                 }
