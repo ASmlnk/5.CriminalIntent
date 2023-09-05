@@ -149,9 +149,9 @@ class CrimeListFragment : Fragment() {
             object : SwipeHelper.UnderlayButtonClickListener {
                 override fun onClick() {
                     //Toast.makeText(context, "Delete", Toast.LENGTH_LONG).show()
+Toast.makeText(requireContext(), "$position", Toast.LENGTH_SHORT).show()
 
 
-                    crimeListViewModel.deleteCrime()
                 }
             })
     }

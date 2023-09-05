@@ -44,6 +44,7 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
 
     init {
         recyclerView.setOnTouchListener(touchListener)
+
     }
 
     private fun recoverSwipedItem() {
