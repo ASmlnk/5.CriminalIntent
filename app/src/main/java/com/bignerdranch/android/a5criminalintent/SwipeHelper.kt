@@ -17,8 +17,8 @@ import kotlin.math.max
 
 @SuppressLint("ClickableViewAccessibility")
 abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHelper.SimpleCallback(
-    0,      //ItemTouchHelper.ACTION_STATE_IDLE,
-    ItemTouchHelper.LEFT
+    ItemTouchHelper.ACTION_STATE_IDLE,
+    ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
 ) {
 
     private var swipedPosition = -1
