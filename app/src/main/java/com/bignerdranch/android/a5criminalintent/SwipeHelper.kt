@@ -22,6 +22,7 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
 ) {
 
     private var swipedPosition = -1
+
     private val buttonsBuffer: MutableMap<Int, List<UnderlayButton>> = mutableMapOf()
     private val recoverQueue = object : LinkedList<Int>() {
         override fun add(element: Int): Boolean {
@@ -37,6 +38,7 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
         recoverQueue.add(swipedPosition)
         Log.i("REC", "$recoverQueue")
         swipedPosition = -1
+
         recoverSwipedItem()
 
         true
@@ -50,7 +52,8 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
     private fun recoverSwipedItem() {
         while (!recoverQueue.isEmpty()) {
             val position = recoverQueue.poll() ?: return
-            //recyclerView.adapter?.notifyItemChanged(position)
+            Log.i("REC", "recpoll $position")
+            recyclerView.adapter?.notifyItemChanged(position)
         }
     }
 
@@ -90,7 +93,6 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
                 if (!buttonsBuffer.containsKey(position)) {
                     buttonsBuffer[position] = instantiateUnderlayButton(position)
                 }
-                Log.i("REC1", "$buttonsBuffer")
                 val buttons = buttonsBuffer[position] ?: return
                 if (buttons.isEmpty()) return
                 maxDX = max(-buttons.intrinsicWidth(), dX)
@@ -112,6 +114,7 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
+        Log.i("REC", " ??? $swipedPosition")
         if (swipedPosition != position) recoverQueue.add(swipedPosition)
         swipedPosition = position
         recoverSwipedItem()
