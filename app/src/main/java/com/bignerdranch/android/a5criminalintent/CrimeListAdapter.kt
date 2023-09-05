@@ -37,7 +37,7 @@ class CrimeHolder(private val binding: ListItemCrimeBinding) :
     }
 }
 
-class CrimeHolderPolice(private val binding: ListItemCrimePoliceBinding, crimeDel: EE) :
+class CrimeHolderPolice(private val binding: ListItemCrimePoliceBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(crime: Crime, onCrimeClicked: (crimeId: UUID) -> Unit) {
@@ -65,15 +65,9 @@ class CrimeHolderPolice(private val binding: ListItemCrimePoliceBinding, crimeDe
         }
     }
 }
-interface EE {
-    fun onCrimeID(crime: Crime)
-}
-
-
 class CrimeListAdapter(
     private val crimes: List<Crime>,
-    private val onCrimeClicked: (crimeId: UUID) -> Unit,
-    private val onCrimeDelete: EE
+    private val onCrimeClicked: (crimeId: UUID) -> Unit
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -101,7 +95,7 @@ class CrimeListAdapter(
             CrimeHolder(binding)
         } else {
             val binding = ListItemCrimePoliceBinding.inflate(inflater, parent, false)
-            CrimeHolderPolice(binding, onCrimeDelete)
+            CrimeHolderPolice(binding)
         }
     }
 

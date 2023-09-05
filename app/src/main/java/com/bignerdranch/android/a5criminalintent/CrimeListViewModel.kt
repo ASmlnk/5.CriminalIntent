@@ -1,14 +1,11 @@
 package com.bignerdranch.android.a5criminalintent
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.*
 
 private const val TAG = "CrimeListViewModel"
 
@@ -31,10 +28,9 @@ class CrimeListViewModel : ViewModel() {
         crimeRepository.addCrime(crime)
     }
 
-    suspend fun deleteCrime(crime: Crime) {
+   fun deleteCrime(crime: Crime) {
         crimeRepository.deleteCrime(crime)
     }
-
 }
 
 /*

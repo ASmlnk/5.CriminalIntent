@@ -57,7 +57,7 @@ class CrimeListFragment : Fragment() {
     ): View? {
 
         _binding = FragmentCrimeListBinding.inflate(inflater, container, false)
-         //binding.crimeRecyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        //binding.crimeRecyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         binding.crimeRecyclerView.layoutManager = LinearLayoutManager(context)
 
         return binding.root
@@ -149,9 +149,11 @@ class CrimeListFragment : Fragment() {
             object : SwipeHelper.UnderlayButtonClickListener {
                 override fun onClick() {
                     //Toast.makeText(context, "Delete", Toast.LENGTH_LONG).show()
-Toast.makeText(requireContext(), "$position", Toast.LENGTH_SHORT).show()
-
-
+                    Toast.makeText(requireContext(), "$position", Toast.LENGTH_SHORT).show()
+                    val crimes = crimeListViewModel.crimes.value
+                    val crime = crimes[position]
+                    crimeListViewModel.deleteCrime(crime)
+                    binding.crimeRecyclerView.adapter?.notifyItemChanged(position)
                 }
             })
     }

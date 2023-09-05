@@ -176,8 +176,10 @@ abstract class SwipeHelper(private val recyclerView: RecyclerView) : ItemTouchHe
             paint.textAlign = Paint.Align.LEFT
 
             val titleBounds = Rect()
+            Log.i("REC", " = $titleBounds")
             paint.getTextBounds(title, 0, title.length, titleBounds)
-
+            Log.i("REC", "==== $titleBounds")
+            Log.i("REC", "rect.height - ${rect.height()}  ${titleBounds.height()}   ${titleBounds.bottom}  ")
             //val y = rect.height() / 2 + titleBounds.height() / 2 - titleBounds.bottom
             val iconDelete = context.resources.getDrawable(R.drawable.ic_baseline_delete_24, null)
             val y =
