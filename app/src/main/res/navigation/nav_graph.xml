@@ -13,9 +13,6 @@
         <action
             android:id="@+id/show_crime_detail"
             app:destination="@id/crimeDetailFragment" />
-        <action
-            android:id="@+id/action_crimeListFragment_to_newd"
-            app:destination="@id/newd" />
     </fragment>
     <fragment
         android:id="@+id/crimeDetailFragment"
@@ -30,17 +27,6 @@
             app:destination="@id/datePickerFragment" />
         <action
             android:id="@+id/select_time"
-            app:destination="@id/timePickerFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/newd"
-        android:name="com.bignerdranch.android.a5criminalintent.Newd"
-        android:label="Newd" >
-        <action
-            android:id="@+id/action_newd_to_datePickerFragment"
-            app:destination="@id/datePickerFragment" />
-        <action
-            android:id="@+id/action_newd_to_timePickerFragment"
             app:destination="@id/timePickerFragment" />
     </fragment>
     <dialog

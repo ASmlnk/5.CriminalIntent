@@ -15,7 +15,7 @@ import java.util.*
 class CrimeHolderSwipe(private val view: View) :
     RecyclerView.ViewHolder(view) {
 
-private val binding = ListItemCrimeBinding.bind(view)
+private val binding = ListItemCrimeSwipeBinding.bind(view)
 
 
     fun bind(
@@ -23,9 +23,9 @@ private val binding = ListItemCrimeBinding.bind(view)
         onCrimeClicked: (crimeId: UUID) -> Unit
     ) {  //лямда для вызова функции NavController
         // перехода к следующему фрагменту
-        /*binding.swipeItemCrime.showMode = SwipeLayout.ShowMode.LayDown
-        binding.swipeItemCrime.addDrag(SwipeLayout.DragEdge.Left, binding.swipeButton)
-        binding.swipeItemCrime.addSwipeListener(object : SwipeLayout.SwipeListener{
+        binding.listItemCrimeSwipe.showMode = SwipeLayout.ShowMode.LayDown
+       // binding.listItemCrimeSwipe.addDrag(SwipeLayout.DragEdge.Left, binding.swipeButton)
+        /*binding.listItemCrimeSwipe.addSwipeListener(object : SwipeLayout.SwipeListener{
             override fun onStartOpen(layout: SwipeLayout?) {
                 TODO("Not yet implemented")
             }
@@ -50,7 +50,7 @@ private val binding = ListItemCrimeBinding.bind(view)
                 TODO("Not yet implemented")
             }
 
-        })
+        })*/
 
         binding.apply {
             crimeTitle.text = crime.title
@@ -59,15 +59,15 @@ private val binding = ListItemCrimeBinding.bind(view)
 
             crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
 
-            root.setOnClickListener {
+            /*root.setOnClickListener {
                 onCrimeClicked(crime.id)
                 *//*Toast.makeText(
                     binding.root.context,
                     "${crime.title} clicked!",
                     Toast.LENGTH_SHORT
                 ).show()*//*
-            }
-        }*/
+            }*/
+        }
     }
 }
 
