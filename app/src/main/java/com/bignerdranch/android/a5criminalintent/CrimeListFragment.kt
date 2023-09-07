@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bignerdranch.android.a5criminalintent.Swipe.SwipeHelper
+import com.bignerdranch.android.a5criminalintent.Swipe.SwipeHelper2k
 import com.bignerdranch.android.a5criminalintent.databinding.FragmentCrimeListBinding
 import kotlinx.coroutines.launch
 import java.util.*
@@ -71,16 +73,6 @@ class CrimeListFragment : Fragment() {
         }
 
         //binding.vrt.isVisible = false
-        val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(binding.crimeRecyclerView) {
-            @SuppressLint("ResourceType")
-            override fun instantiateUnderlayButton(position: Int): List<UnderlayButton> {
-
-                val deleteButton = deleteButton(position)
-                val buttons = listOf<UnderlayButton>(deleteButton)
-                return buttons
-            }
-        })
-        itemTouchHelper.attachToRecyclerView(binding.crimeRecyclerView)
 
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -93,31 +85,22 @@ class CrimeListFragment : Fragment() {
                             CrimeListFragmentDirections.showCrimeDetail(crimeid)
                         )     //лямда для вызова функции NavController
                         // перехода к следующему фрагменту
+
+
                     }
                 }
             }
         }
+       /* val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(binding.crimeRecyclerView) {
+            @SuppressLint("ResourceType")
+            override fun instantiateUnderlayButton(position: Int): List<UnderlayButton> {
 
-
-        /*itemTouchHelper = ItemTouchHelper(object :ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ){
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
+                val deleteButton = deleteButton(position)
+                val buttons = listOf<UnderlayButton>(deleteButton)
+                return buttons
             }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val pos = viewHolder.adapterPosition
-                binding.crimeRecyclerView.adapter?.notifyItemChanged(pos)
-            }
-
-        })*/
-
+        })
+        itemTouchHelper.attachToRecyclerView(binding.crimeRecyclerView)*/
     }
 
     override fun onDestroyView() {

@@ -8,7 +8,69 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.a5criminalintent.databinding.ListItemCrimeBinding
 import com.bignerdranch.android.a5criminalintent.databinding.ListItemCrimePoliceBinding
+import com.bignerdranch.android.a5criminalintent.databinding.ListItemCrimeSwipeBinding
+import com.daimajia.swipe.SwipeLayout
 import java.util.*
+
+class CrimeHolderSwipe(private val view: View) :
+    RecyclerView.ViewHolder(view) {
+
+private val binding = ListItemCrimeBinding.bind(view)
+
+
+    fun bind(
+        crime: Crime,
+        onCrimeClicked: (crimeId: UUID) -> Unit
+    ) {  //лямда для вызова функции NavController
+        // перехода к следующему фрагменту
+        /*binding.swipeItemCrime.showMode = SwipeLayout.ShowMode.LayDown
+        binding.swipeItemCrime.addDrag(SwipeLayout.DragEdge.Left, binding.swipeButton)
+        binding.swipeItemCrime.addSwipeListener(object : SwipeLayout.SwipeListener{
+            override fun onStartOpen(layout: SwipeLayout?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onOpen(layout: SwipeLayout?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onStartClose(layout: SwipeLayout?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onClose(layout: SwipeLayout?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onUpdate(layout: SwipeLayout?, leftOffset: Int, topOffset: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onHandRelease(layout: SwipeLayout?, xvel: Float, yvel: Float) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        binding.apply {
+            crimeTitle.text = crime.title
+            crimeTitle.text = crime.title
+            crimeDate.text = dateFormat(crime)                        //crime.date.toString()
+
+            crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
+
+            root.setOnClickListener {
+                onCrimeClicked(crime.id)
+                *//*Toast.makeText(
+                    binding.root.context,
+                    "${crime.title} clicked!",
+                    Toast.LENGTH_SHORT
+                ).show()*//*
+            }
+        }*/
+    }
+}
+
 
 class CrimeHolder(private val binding: ListItemCrimeBinding) :
     RecyclerView.ViewHolder(binding.root) {
@@ -89,10 +151,11 @@ class CrimeListAdapter(
     ): RecyclerView.ViewHolder {
 
         val inflater = LayoutInflater.from(parent.context)
+        val s = LayoutInflater.from(parent.context).inflate(R.layout.list_item_crime_swipe, parent, false)
 
         return if (viewType == listItemCrime) {
-            val binding = ListItemCrimeBinding.inflate(inflater, parent, false)
-            CrimeHolder(binding)
+           // val binding = ListItemCrimeSwipeBinding.inflate(inflater, parent, false)
+            CrimeHolderSwipe(s)
         } else {
             val binding = ListItemCrimePoliceBinding.inflate(inflater, parent, false)
             CrimeHolderPolice(binding)
@@ -103,7 +166,7 @@ class CrimeListAdapter(
         val crime = crimes[position]
 
         when (holder) {
-            is CrimeHolder -> holder.bind(crime, onCrimeClicked)
+            is CrimeHolderSwipe -> holder.bind(crime, onCrimeClicked)
             is CrimeHolderPolice -> holder.bind(crime, onCrimeClicked)
         }
     }
