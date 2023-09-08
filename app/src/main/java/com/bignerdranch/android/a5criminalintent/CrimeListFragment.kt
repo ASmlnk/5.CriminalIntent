@@ -38,7 +38,6 @@ class CrimeListFragment : Fragment() {
     private val crimeListViewModel: CrimeListViewModel by viewModels()
     private lateinit var itemTouchHelper: ItemTouchHelper
 
-
     // private var job: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,9 +47,7 @@ class CrimeListFragment : Fragment() {
         val a = activity as AppCompatActivity
         val aa = a.supportActionBar
         aa?.setTitle(R.string.new_crime)
-
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,35 +69,33 @@ class CrimeListFragment : Fragment() {
             showNewCrime()
         }
 
-        //binding.vrt.isVisible = false
-
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 crimeListViewModel.crimes.collect { crimes ->
-                    binding.crimeRecyclerView.adapter = CrimeListAdapter(crimes) { crimeid ->
+                    binding.crimeRecyclerView.adapter = CrimeListAdapter(crimes, { crimeId ->
                         findNavController().navigate(
                             /*R.id.show_crime_detail*/
-                            CrimeListFragmentDirections.showCrimeDetail(crimeid)
+                            CrimeListFragmentDirections.showCrimeDetail(crimeId)
                         )     //лямда для вызова функции NavController
                         // перехода к следующему фрагменту
-
-
+                    }) { crime, position ->
+                        crimeListViewModel.deleteCrime(crime)
+                        binding.crimeRecyclerView.adapter?.notifyItemChanged(position)
                     }
                 }
             }
         }
-       /* val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(binding.crimeRecyclerView) {
-            @SuppressLint("ResourceType")
-            override fun instantiateUnderlayButton(position: Int): List<UnderlayButton> {
+        /* val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(binding.crimeRecyclerView) {
+             @SuppressLint("ResourceType")
+             override fun instantiateUnderlayButton(position: Int): List<UnderlayButton> {
 
-                val deleteButton = deleteButton(position)
-                val buttons = listOf<UnderlayButton>(deleteButton)
-                return buttons
-            }
-        })
-        itemTouchHelper.attachToRecyclerView(binding.crimeRecyclerView)*/
+                 val deleteButton = deleteButton(position)
+                 val buttons = listOf<UnderlayButton>(deleteButton)
+                 return buttons
+             }
+         })
+         itemTouchHelper.attachToRecyclerView(binding.crimeRecyclerView)*/
     }
 
     override fun onDestroyView() {
