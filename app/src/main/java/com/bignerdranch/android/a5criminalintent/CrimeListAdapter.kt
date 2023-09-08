@@ -18,12 +18,12 @@ import java.util.*
 class CrimeHolderSwipe(private val binding: ListItemCrimeSwipeBinding) :     ///class CrimeHolderSwipe(private val view: View) :
     RecyclerView.ViewHolder(binding.root) {
 
-    //private val binding = ListItemCrimeSwipeBinding.bind(view
+    //private val binding = ListItemCrimeSwipeBinding.bind(view)
+
 
 
     fun bind(
         crime: Crime,
-        position: Int,
         onCrimeClicked: (crimeId: UUID) -> Unit,
         onCrimeDeleteClicked: (crime: Crime, position: Int) -> Unit
     ) {  //лямда для вызова функции NavController
@@ -44,7 +44,7 @@ class CrimeHolderSwipe(private val binding: ListItemCrimeSwipeBinding) :     ///
                     Log.i("111111", "onOpen")
                     binding.linearLayout.isClickable = false
                     binding.deleteButton.setOnClickListener {
-                        onCrimeDeleteClicked(crime, position)
+                        onCrimeDeleteClicked(crime, absoluteAdapterPosition)
                     }
                 }
 
@@ -91,7 +91,6 @@ class CrimeHolderSwipePolice(private val binding: ListItemCrimePoliceSwipeBindin
 
     fun bind(
         crime: Crime,
-        position: Int,
         onCrimeClicked: (crimeId: UUID) -> Unit,
         onCrimeDeleteClicked: (crime: Crime, position: Int) -> Unit
     ) {
@@ -109,7 +108,7 @@ class CrimeHolderSwipePolice(private val binding: ListItemCrimePoliceSwipeBindin
                 override fun onOpen(layout: SwipeLayout?) {
                     binding.linearLayout.isClickable = false
                     binding.deleteButton.setOnClickListener {
-                        onCrimeDeleteClicked(crime, position)
+                        onCrimeDeleteClicked(crime, absoluteAdapterPosition)
                     }
                 }
 
@@ -247,13 +246,11 @@ class CrimeListAdapter(
         when (holder) {
             is CrimeHolderSwipe -> holder.bind(
                 crime,
-                position,
                 onCrimeClicked,
                 onCrimeDeleteClicked
             )
             is CrimeHolderSwipePolice -> holder.bind(
                 crime,
-                position,
                 onCrimeClicked,
                 onCrimeDeleteClicked
             )
