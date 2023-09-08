@@ -17,7 +17,7 @@ class CrimeHolderSwipe(private val view: View) :
     RecyclerView.ViewHolder(view) {
 
 private val binding = ListItemCrimeSwipeBinding.bind(view)
-
+var v = -1
 
     fun bind(
         crime: Crime,
@@ -25,29 +25,46 @@ private val binding = ListItemCrimeSwipeBinding.bind(view)
     ) {  //лямда для вызова функции NavController
         // перехода к следующему фрагменту
         binding.listItemCrimeSwipe.showMode = SwipeLayout.ShowMode.LayDown
-       // binding.listItemCrimeSwipe.addDrag(SwipeLayout.DragEdge.Left, binding.swipeButton)
+        binding.listItemCrimeSwipe.addDrag(SwipeLayout.DragEdge.Left, binding.swipeButton)
         binding.listItemCrimeSwipe.addSwipeListener(object : SwipeLayout.SwipeListener{
             override fun onStartOpen(layout: SwipeLayout?) {
                 Log.i("111111", "onStartOpen")
+                //binding.root.isClickable = true
             }
 
             override fun onOpen(layout: SwipeLayout?) {
                 Log.i("111111", "onOpen")
+
+                //binding.root.isClickable = false
+                binding.linearLayout.isClickable = false
+                binding.crimePolice1.setOnClickListener {
+                    Toast.makeText(
+                        binding.root.context,
+                        " clicked!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
 
             override fun onStartClose(layout: SwipeLayout?) {
                 Log.i("111111", "onStartClose")
+               // binding.root.isClickable = true
+
             }
 
             override fun onClose(layout: SwipeLayout?) {
                 Log.i("111111", "onClose")
+                //binding.root.isClickable = false
+                binding.linearLayout.isClickable = true
             }
 
             override fun onUpdate(layout: SwipeLayout?, leftOffset: Int, topOffset: Int) {
                 Log.i("111111", "onUpdate")
+               // binding.root.isClickable = false
             }
 
             override fun onHandRelease(layout: SwipeLayout?, xvel: Float, yvel: Float) {
+
                 Log.i("111111", "onHandRelease")
             }
 
@@ -59,15 +76,22 @@ private val binding = ListItemCrimeSwipeBinding.bind(view)
             crimeDate.text = dateFormat(crime)                        //crime.date.toString()
 
             crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
+binding.linearLayout.setOnClickListener{
 
+
+    Toast.makeText(
+        binding.root.context,
+        "${crime.title} clicked!",
+        Toast.LENGTH_SHORT
+    ).show()
             /*root.setOnClickListener {
-                onCrimeClicked(crime.id)
-                *//*Toast.makeText(
+               // onCrimeClicked(crime.id)
+                Toast.makeText(
                     binding.root.context,
                     "${crime.title} clicked!",
                     Toast.LENGTH_SHORT
-                ).show()*//*
-            }*/
+                ).show()*/
+            }
         }
     }
 }
