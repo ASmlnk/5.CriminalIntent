@@ -1,6 +1,7 @@
 package com.bignerdranch.android.a5criminalintent
 
 import android.icu.text.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,32 +26,32 @@ private val binding = ListItemCrimeSwipeBinding.bind(view)
         // перехода к следующему фрагменту
         binding.listItemCrimeSwipe.showMode = SwipeLayout.ShowMode.LayDown
        // binding.listItemCrimeSwipe.addDrag(SwipeLayout.DragEdge.Left, binding.swipeButton)
-        /*binding.listItemCrimeSwipe.addSwipeListener(object : SwipeLayout.SwipeListener{
+        binding.listItemCrimeSwipe.addSwipeListener(object : SwipeLayout.SwipeListener{
             override fun onStartOpen(layout: SwipeLayout?) {
-                TODO("Not yet implemented")
+                Log.i("111111", "onStartOpen")
             }
 
             override fun onOpen(layout: SwipeLayout?) {
-                TODO("Not yet implemented")
+                Log.i("111111", "onOpen")
             }
 
             override fun onStartClose(layout: SwipeLayout?) {
-                TODO("Not yet implemented")
+                Log.i("111111", "onStartClose")
             }
 
             override fun onClose(layout: SwipeLayout?) {
-                TODO("Not yet implemented")
+                Log.i("111111", "onClose")
             }
 
             override fun onUpdate(layout: SwipeLayout?, leftOffset: Int, topOffset: Int) {
-                TODO("Not yet implemented")
+                Log.i("111111", "onUpdate")
             }
 
             override fun onHandRelease(layout: SwipeLayout?, xvel: Float, yvel: Float) {
-                TODO("Not yet implemented")
+                Log.i("111111", "onHandRelease")
             }
 
-        })*/
+        })
 
         binding.apply {
             crimeTitle.text = crime.title
