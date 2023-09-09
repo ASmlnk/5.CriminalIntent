@@ -15,196 +15,11 @@ import com.bignerdranch.android.a5criminalintent.databinding.ListItemCrimeSwipeB
 import com.daimajia.swipe.SwipeLayout
 import java.util.*
 
-class CrimeHolderSwipe(private val binding: ListItemCrimeSwipeBinding) :     ///class CrimeHolderSwipe(private val view: View) :
-    RecyclerView.ViewHolder(binding.root) {
 
-    //private val binding = ListItemCrimeSwipeBinding.bind(view)
-
-
-
-    fun bind(
-        crime: Crime,
-        onCrimeClicked: (crimeId: UUID) -> Unit,
-        onCrimeDeleteClicked: (crime: Crime, position: Int) -> Unit
-    ) {  //лямда для вызова функции NavController
-        // перехода к следующему фрагменту
-
-        binding.listItemCrimeSwipe.apply {
-            showMode = SwipeLayout.ShowMode.PullOut                //SwipeLayout.ShowMode.LayDown
-
-            addDrag(SwipeLayout.DragEdge.Right, binding.swipeButton)
-            addDrag(SwipeLayout.DragEdge.Left, null)
-
-            addSwipeListener(object : SwipeLayout.SwipeListener {
-                override fun onStartOpen(layout: SwipeLayout?) {
-                    Log.i("111111", "onStartOpen")
-                }
-
-                override fun onOpen(layout: SwipeLayout?) {
-                    Log.i("111111", "onOpen")
-                    binding.linearLayout.isClickable = false
-                    binding.deleteButton.setOnClickListener {
-                        onCrimeDeleteClicked(crime, absoluteAdapterPosition)
-                    }
-                }
-
-                override fun onStartClose(layout: SwipeLayout?) {
-                    Log.i("111111", "onStartClose")
-                }
-
-                override fun onClose(layout: SwipeLayout?) {
-                    Log.i("111111", "onClose")
-                    binding.linearLayout.isClickable = true
-                }
-
-                override fun onUpdate(layout: SwipeLayout?, leftOffset: Int, topOffset: Int) {
-                    Log.i("111111", "onUpdate")
-                }
-
-                override fun onHandRelease(layout: SwipeLayout?, xvel: Float, yvel: Float) {
-                    Log.i("111111", "onHandRelease")
-                }
-            })
-        }
-
-        binding.apply {
-            crimeTitle.text = crime.title
-            crimeTitle.text = crime.title
-            crimeDate.text = dateFormat(crime)                        //crime.date.toString()
-            crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
-            linearLayout.setOnClickListener {
-                onCrimeClicked(crime.id)
-                /*root.setOnClickListener {
-
-                    Toast.makeText(
-                        binding.root.context,
-                        "${crime.title} clicked!",
-                        Toast.LENGTH_SHORT
-                    ).show()*/
-            }
-        }
-    }
-}
-
-class CrimeHolderSwipePolice(private val binding: ListItemCrimePoliceSwipeBinding) :
-    RecyclerView.ViewHolder(binding.root) {
-
-    fun bind(
-        crime: Crime,
-        onCrimeClicked: (crimeId: UUID) -> Unit,
-        onCrimeDeleteClicked: (crime: Crime, position: Int) -> Unit
-    ) {
-
-        binding.listItemCrimeSwipe.apply {
-            showMode = SwipeLayout.ShowMode.PullOut                //SwipeLayout.ShowMode.LayDown
-
-            addDrag(SwipeLayout.DragEdge.Right, binding.swipeButton)
-            addDrag(SwipeLayout.DragEdge.Left, null)
-
-            addSwipeListener(object : SwipeLayout.SwipeListener {
-                override fun onStartOpen(layout: SwipeLayout?) {
-                }
-
-                override fun onOpen(layout: SwipeLayout?) {
-                    binding.linearLayout.isClickable = false
-                    binding.deleteButton.setOnClickListener {
-                        onCrimeDeleteClicked(crime, absoluteAdapterPosition)
-                    }
-                }
-
-                override fun onStartClose(layout: SwipeLayout?) {
-                }
-
-                override fun onClose(layout: SwipeLayout?) {
-                    binding.linearLayout.isClickable = true
-                }
-
-                override fun onUpdate(layout: SwipeLayout?, leftOffset: Int, topOffset: Int) {
-                }
-
-                override fun onHandRelease(layout: SwipeLayout?, xvel: Float, yvel: Float) {
-                }
-            })
-        }
-
-        binding.apply {
-            crimeTitle.text = crime.title
-            crimeTitle.text = crime.title
-            crimeDate.text = dateFormat(crime)
-            crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
-            linearLayout.setOnClickListener {
-                onCrimeClicked(crime.id)
-            }
-            crimePolice.setOnClickListener {
-                Toast.makeText(
-                    binding.root.context,
-                    "The police went to you",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-}
-
-
-class CrimeHolder(private val binding: ListItemCrimeBinding) :
-    RecyclerView.ViewHolder(binding.root) {
-
-    fun bind(
-        crime: Crime,
-        onCrimeClicked: (crimeId: UUID) -> Unit
-    ) {  //лямда для вызова функции NavController
-        // перехода к следующему фрагменту
-
-        binding.apply {
-            crimeTitle.text = crime.title
-            crimeDate.text = dateFormat(crime)                        //crime.date.toString()
-
-            crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
-
-            root.setOnClickListener {
-                onCrimeClicked(crime.id)
-                /*Toast.makeText(
-                    binding.root.context,
-                    "${crime.title} clicked!",
-                    Toast.LENGTH_SHORT
-                ).show()*/
-            }
-        }
-    }
-}
-
-class CrimeHolderPolice(private val binding: ListItemCrimePoliceBinding) :
-    RecyclerView.ViewHolder(binding.root) {
-
-    fun bind(crime: Crime, onCrimeClicked: (crimeId: UUID) -> Unit) {
-
-        binding.apply {
-            crimeTitle.text = crime.title
-            crimeDate.text =
-                dateFormat(crime)                                   //crime.date.toString()
-
-            crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
-
-            crimePolice.setOnClickListener {
-                // onCrimeClicked(crime.id)
-                Toast.makeText(
-                    binding.root.context,
-                    "The police went to you",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-
-            root.setOnClickListener {
-                onCrimeClicked(crime.id)
-            }
-
-        }
-    }
-}
 
 class CrimeListAdapter(
     private val crimes: List<Crime>,
+    private val onNotifyItemChanged: OnNotifyItemChanged,
     private val onCrimeClicked: (crimeId: UUID) -> Unit,
     private val onCrimeDeleteClicked: (crime: Crime, position: Int) -> Unit
 ) :
@@ -213,6 +28,23 @@ class CrimeListAdapter(
 
     private val listItemCrime = 0
     private val listItemCrimePolice = 1
+
+
+    private var swipedPosition = -1
+    private val recoverQueue = object : LinkedList<Int>() {
+        override fun add(element: Int): Boolean {
+            if (contains(element)) return false
+            return super.add(element)
+        }
+    }
+
+    private fun recoverSwipedItem() {
+
+        while (!recoverQueue.isEmpty()) {
+            val position = recoverQueue.poll() ?: return
+           // if (position >= 0) recyclerView.adapter?.notifyItemChanged(position)
+        }
+    }
 
     override fun getItemViewType(position: Int): Int {
         return if (crimes[position].isPolice) {
@@ -258,6 +90,198 @@ class CrimeListAdapter(
     }
 
     override fun getItemCount() = crimes.size
+
+    inner class CrimeHolderSwipe(private val binding: ListItemCrimeSwipeBinding ) :     ///class CrimeHolderSwipe(private val view: View) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        //private val binding = ListItemCrimeSwipeBinding.bind(view)
+
+        fun bind(
+            crime: Crime,
+            onCrimeClicked: (crimeId: UUID) -> Unit,
+            onCrimeDeleteClicked: (crime: Crime, position: Int) -> Unit
+        ) {  //лямда для вызова функции NavController
+            // перехода к следующему фрагменту
+
+            binding.listItemCrimeSwipe.apply {
+                showMode = SwipeLayout.ShowMode.PullOut                //SwipeLayout.ShowMode.LayDown
+
+                addDrag(SwipeLayout.DragEdge.Right, binding.swipeButton)
+                addDrag(SwipeLayout.DragEdge.Left, null)
+
+                addSwipeListener(object : SwipeLayout.SwipeListener {
+                    override fun onStartOpen(layout: SwipeLayout?) {
+                        Log.i("111111", "onStartOpen")
+                        val position = absoluteAdapterPosition
+                        if (position != swipedPosition) onNotifyItemChanged.onNotifyItemAdapter(swipedPosition)
+                    }
+
+                    override fun onOpen(layout: SwipeLayout?) {
+                        Log.i("111111", "onOpen")
+                        binding.linearLayout.isClickable = false
+                        binding.deleteButton.setOnClickListener {
+                            onCrimeDeleteClicked(crime, absoluteAdapterPosition)
+                        }
+                        val position = absoluteAdapterPosition
+                        swipedPosition = position
+                        recoverQueue.add(swipedPosition)
+                    }
+
+                    override fun onStartClose(layout: SwipeLayout?) {
+                        Log.i("111111", "onStartClose")
+                    }
+
+                    override fun onClose(layout: SwipeLayout?) {
+                        Log.i("111111", "onClose")
+                        binding.linearLayout.isClickable = true
+                        recoverSwipedItem()
+                    }
+
+                    override fun onUpdate(layout: SwipeLayout?, leftOffset: Int, topOffset: Int) {
+                        Log.i("111111", "onUpdate")
+                    }
+
+                    override fun onHandRelease(layout: SwipeLayout?, xvel: Float, yvel: Float) {
+                        Log.i("111111", "onHandRelease")
+                    }
+                })
+            }
+
+            binding.apply {
+                crimeTitle.text = crime.title
+                crimeTitle.text = crime.title
+                crimeDate.text = dateFormat(crime)                        //crime.date.toString()
+                crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
+                linearLayout.setOnClickListener {
+                    onCrimeClicked(crime.id)
+                    /*root.setOnClickListener {
+
+                        Toast.makeText(
+                            binding.root.context,
+                            "${crime.title} clicked!",
+                            Toast.LENGTH_SHORT
+                        ).show()*/
+                }
+            }
+        }
+    }
+
+   inner class CrimeHolderSwipePolice(private val binding: ListItemCrimePoliceSwipeBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(
+            crime: Crime,
+            onCrimeClicked: (crimeId: UUID) -> Unit,
+            onCrimeDeleteClicked: (crime: Crime, position: Int) -> Unit
+        ) {
+
+            binding.listItemCrimeSwipe.apply {
+                showMode = SwipeLayout.ShowMode.PullOut                //SwipeLayout.ShowMode.LayDown
+
+                addDrag(SwipeLayout.DragEdge.Right, binding.swipeButton)
+                addDrag(SwipeLayout.DragEdge.Left, null)
+
+                addSwipeListener(object : SwipeLayout.SwipeListener {
+                    override fun onStartOpen(layout: SwipeLayout?) {
+                    }
+
+                    override fun onOpen(layout: SwipeLayout?) {
+                        binding.linearLayout.isClickable = false
+                        binding.deleteButton.setOnClickListener {
+                            onCrimeDeleteClicked(crime, absoluteAdapterPosition)
+                        }
+                    }
+
+                    override fun onStartClose(layout: SwipeLayout?) {
+                    }
+
+                    override fun onClose(layout: SwipeLayout?) {
+                        binding.linearLayout.isClickable = true
+                    }
+
+                    override fun onUpdate(layout: SwipeLayout?, leftOffset: Int, topOffset: Int) {
+                    }
+
+                    override fun onHandRelease(layout: SwipeLayout?, xvel: Float, yvel: Float) {
+                    }
+                })
+            }
+
+            binding.apply {
+                crimeTitle.text = crime.title
+                crimeTitle.text = crime.title
+                crimeDate.text = dateFormat(crime)
+                crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
+                linearLayout.setOnClickListener {
+                    onCrimeClicked(crime.id)
+                }
+                crimePolice.setOnClickListener {
+                    Toast.makeText(
+                        binding.root.context,
+                        "The police went to you",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
+
+    class CrimeHolder(private val binding: ListItemCrimeBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(
+            crime: Crime,
+            onCrimeClicked: (crimeId: UUID) -> Unit
+        ) {  //лямда для вызова функции NavController
+            // перехода к следующему фрагменту
+
+            binding.apply {
+                crimeTitle.text = crime.title
+                crimeDate.text = dateFormat(crime)                        //crime.date.toString()
+
+                crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
+
+                root.setOnClickListener {
+                    onCrimeClicked(crime.id)
+                    /*Toast.makeText(
+                        binding.root.context,
+                        "${crime.title} clicked!",
+                        Toast.LENGTH_SHORT
+                    ).show()*/
+                }
+            }
+        }
+    }
+
+    class CrimeHolderPolice(private val binding: ListItemCrimePoliceBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(crime: Crime, onCrimeClicked: (crimeId: UUID) -> Unit) {
+
+            binding.apply {
+                crimeTitle.text = crime.title
+                crimeDate.text =
+                    dateFormat(crime)                                   //crime.date.toString()
+
+                crimeSolved.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
+
+                crimePolice.setOnClickListener {
+                    // onCrimeClicked(crime.id)
+                    Toast.makeText(
+                        binding.root.context,
+                        "The police went to you",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+                root.setOnClickListener {
+                    onCrimeClicked(crime.id)
+                }
+
+            }
+        }
+    }
 }
 
 private fun dateFormat(crime: Crime) =

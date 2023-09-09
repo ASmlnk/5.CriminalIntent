@@ -37,6 +37,11 @@ class CrimeListFragment : Fragment() {
 
     private val crimeListViewModel: CrimeListViewModel by viewModels()
     private lateinit var itemTouchHelper: ItemTouchHelper
+    private val onNotifyItemChanged = object : OnNotifyItemChanged {
+        override fun onNotifyItemAdapter(position: Int) {
+            binding.crimeRecyclerView.adapter?.notifyItemChanged(position)
+        }
+    }
 
     // private var job: Job? = null
 
@@ -73,7 +78,7 @@ class CrimeListFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 crimeListViewModel.crimes.collect { crimes ->
-                    binding.crimeRecyclerView.adapter = CrimeListAdapter(crimes, { crimeId ->
+                    binding.crimeRecyclerView.adapter = CrimeListAdapter(crimes,onNotifyItemChanged, { crimeId ->
                         findNavController().navigate(
                             /*R.id.show_crime_detail*/
                             CrimeListFragmentDirections.showCrimeDetail(crimeId)
