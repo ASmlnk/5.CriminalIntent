@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:id="@+id/list_item_crime_swipe"
+    android:id="@+id/list_item_crime_swipe_lay"
     android:layout_marginVertical="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout

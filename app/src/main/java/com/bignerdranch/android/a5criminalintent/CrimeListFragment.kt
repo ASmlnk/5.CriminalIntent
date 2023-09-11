@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.a5criminalintent.Swipe.SwipeHelper
 import com.bignerdranch.android.a5criminalintent.Swipe.SwipeHelper2k
 import com.bignerdranch.android.a5criminalintent.databinding.FragmentCrimeListBinding
+import com.daimajia.swipe.SwipeLayout
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -36,10 +37,12 @@ class CrimeListFragment : Fragment() {
         }
 
     private val crimeListViewModel: CrimeListViewModel by viewModels()
-    private lateinit var itemTouchHelper: ItemTouchHelper
+   // private lateinit var itemTouchHelper: ItemTouchHelper
     private val onNotifyItemChanged = object : OnNotifyItemChanged {
         override fun onNotifyItemAdapter(position: Int) {
-            binding.crimeRecyclerView.adapter?.notifyItemChanged(position)
+            //binding.crimeRecyclerView.adapter?.notifyItemChanged(position)
+            binding.crimeRecyclerView.findViewHolderForAdapterPosition(position)
+                ?.itemView?.findViewById<SwipeLayout>(R.id.list_item_crime_swipe_lay)?.close()
         }
     }
 
@@ -86,7 +89,7 @@ class CrimeListFragment : Fragment() {
                         // перехода к следующему фрагменту
                     }) { crime, position ->
                         crimeListViewModel.deleteCrime(crime)
-                        binding.crimeRecyclerView.adapter?.notifyItemChanged(position)
+                        //binding.crimeRecyclerView.adapter?.notifyItemChanged(position)
                     }
                 }
             }
@@ -101,6 +104,8 @@ class CrimeListFragment : Fragment() {
              }
          })
          itemTouchHelper.attachToRecyclerView(binding.crimeRecyclerView)*/
+
+       // binding.crimeRecyclerView.itemAnimator?.endAnimations()
     }
 
     override fun onDestroyView() {
@@ -135,8 +140,8 @@ class CrimeListFragment : Fragment() {
                     Toast.makeText(requireContext(), "Crime delete", Toast.LENGTH_LONG).show()
                     val crimes = crimeListViewModel.crimes.value
                     val crime = crimes[position]
+                    binding.crimeRecyclerView.adapter?.notifyItemRemoved(position)
                     crimeListViewModel.deleteCrime(crime)
-                    binding.crimeRecyclerView.adapter?.notifyItemChanged(position)
                 }
             })
     }

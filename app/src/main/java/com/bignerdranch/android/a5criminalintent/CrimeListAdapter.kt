@@ -2,9 +2,7 @@ package com.bignerdranch.android.a5criminalintent
 
 import android.icu.text.DateFormat
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.appcompat.view.menu.MenuView
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +14,6 @@ import com.daimajia.swipe.SwipeLayout
 import java.util.*
 
 
-
 class CrimeListAdapter(
     private val crimes: List<Crime>,
     private val onNotifyItemChanged: OnNotifyItemChanged,
@@ -25,26 +22,9 @@ class CrimeListAdapter(
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-
     private val listItemCrime = 0
     private val listItemCrimePolice = 1
-
-
     private var swipedPosition = -1
-    private val recoverQueue = object : LinkedList<Int>() {
-        override fun add(element: Int): Boolean {
-            if (contains(element)) return false
-            return super.add(element)
-        }
-    }
-
-    private fun recoverSwipedItem() {
-
-        while (!recoverQueue.isEmpty()) {
-            val position = recoverQueue.poll() ?: return
-           // if (position >= 0) recyclerView.adapter?.notifyItemChanged(position)
-        }
-    }
 
     override fun getItemViewType(position: Int): Int {
         return if (crimes[position].isPolice) {
@@ -91,10 +71,8 @@ class CrimeListAdapter(
 
     override fun getItemCount() = crimes.size
 
-    inner class CrimeHolderSwipe(private val binding: ListItemCrimeSwipeBinding ) :     ///class CrimeHolderSwipe(private val view: View) :
+    inner class CrimeHolderSwipe(private val binding: ListItemCrimeSwipeBinding) :     ///class CrimeHolderSwipe(private val view: View) :
         RecyclerView.ViewHolder(binding.root) {
-
-        //private val binding = ListItemCrimeSwipeBinding.bind(view)
 
         fun bind(
             crime: Crime,
@@ -103,46 +81,36 @@ class CrimeListAdapter(
         ) {  //лямда для вызова функции NavController
             // перехода к следующему фрагменту
 
-            binding.listItemCrimeSwipe.apply {
-                showMode = SwipeLayout.ShowMode.PullOut                //SwipeLayout.ShowMode.LayDown
+            binding.listItemCrimeSwipeLay.apply {
+                showMode =
+                    SwipeLayout.ShowMode.PullOut                //SwipeLayout.ShowMode.LayDown
 
                 addDrag(SwipeLayout.DragEdge.Right, binding.swipeButton)
                 addDrag(SwipeLayout.DragEdge.Left, null)
 
                 addSwipeListener(object : SwipeLayout.SwipeListener {
                     override fun onStartOpen(layout: SwipeLayout?) {
-                        Log.i("111111", "onStartOpen")
                         val position = absoluteAdapterPosition
-                        if (position != swipedPosition) onNotifyItemChanged.onNotifyItemAdapter(swipedPosition)
+                        if (position != swipedPosition) onNotifyItemChanged.onNotifyItemAdapter(
+                            swipedPosition
+                        )
                     }
-
                     override fun onOpen(layout: SwipeLayout?) {
-                        Log.i("111111", "onOpen")
                         binding.linearLayout.isClickable = false
                         binding.deleteButton.setOnClickListener {
                             onCrimeDeleteClicked(crime, absoluteAdapterPosition)
                         }
                         val position = absoluteAdapterPosition
                         swipedPosition = position
-                        recoverQueue.add(swipedPosition)
                     }
-
                     override fun onStartClose(layout: SwipeLayout?) {
-                        Log.i("111111", "onStartClose")
                     }
-
                     override fun onClose(layout: SwipeLayout?) {
-                        Log.i("111111", "onClose")
                         binding.linearLayout.isClickable = true
-                        recoverSwipedItem()
                     }
-
                     override fun onUpdate(layout: SwipeLayout?, leftOffset: Int, topOffset: Int) {
-                        Log.i("111111", "onUpdate")
                     }
-
                     override fun onHandRelease(layout: SwipeLayout?, xvel: Float, yvel: Float) {
-                        Log.i("111111", "onHandRelease")
                     }
                 })
             }
@@ -166,7 +134,7 @@ class CrimeListAdapter(
         }
     }
 
-   inner class CrimeHolderSwipePolice(private val binding: ListItemCrimePoliceSwipeBinding) :
+    inner class CrimeHolderSwipePolice(private val binding: ListItemCrimePoliceSwipeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
@@ -175,33 +143,34 @@ class CrimeListAdapter(
             onCrimeDeleteClicked: (crime: Crime, position: Int) -> Unit
         ) {
 
-            binding.listItemCrimeSwipe.apply {
-                showMode = SwipeLayout.ShowMode.PullOut                //SwipeLayout.ShowMode.LayDown
+            binding.listItemCrimeSwipeLay.apply {
+                showMode = SwipeLayout.ShowMode.PullOut
 
                 addDrag(SwipeLayout.DragEdge.Right, binding.swipeButton)
                 addDrag(SwipeLayout.DragEdge.Left, null)
 
                 addSwipeListener(object : SwipeLayout.SwipeListener {
                     override fun onStartOpen(layout: SwipeLayout?) {
+                        val position = absoluteAdapterPosition
+                        if (position != swipedPosition) onNotifyItemChanged.onNotifyItemAdapter(
+                            swipedPosition
+                        )
                     }
-
                     override fun onOpen(layout: SwipeLayout?) {
                         binding.linearLayout.isClickable = false
                         binding.deleteButton.setOnClickListener {
                             onCrimeDeleteClicked(crime, absoluteAdapterPosition)
                         }
+                        val position = absoluteAdapterPosition
+                        swipedPosition = position
                     }
-
                     override fun onStartClose(layout: SwipeLayout?) {
                     }
-
                     override fun onClose(layout: SwipeLayout?) {
                         binding.linearLayout.isClickable = true
                     }
-
                     override fun onUpdate(layout: SwipeLayout?, leftOffset: Int, topOffset: Int) {
                     }
-
                     override fun onHandRelease(layout: SwipeLayout?, xvel: Float, yvel: Float) {
                     }
                 })
