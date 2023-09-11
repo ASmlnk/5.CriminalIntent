@@ -3,6 +3,7 @@ package com.bignerdranch.android.a5criminalintent
 import android.content.Context
 import androidx.room.Room
 import com.bignerdranch.android.a5criminalintent.DataBase.CrimeDataBase
+import com.bignerdranch.android.a5criminalintent.DataBase.migration_1_2
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +23,7 @@ class CrimeRepository private constructor(
             CrimeDataBase::class.java,
             DATABASE_NAME
         )
+        .addMigrations(migration_1_2)
         .build()
 
     fun getCrimes(): Flow<List<Crime>> = database.crimeDao().getCrimes()
