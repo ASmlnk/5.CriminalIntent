@@ -62,7 +62,6 @@ class CrimeListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentCrimeListBinding.inflate(inflater, container, false)
         //binding.crimeRecyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         binding.crimeRecyclerView.layoutManager = LinearLayoutManager(context)
