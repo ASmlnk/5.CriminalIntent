@@ -1,7 +1,14 @@
 package com.bignerdranch.android.a5criminalintent
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
+import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +16,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.registerForActivityResult
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -43,6 +53,21 @@ class CrimeDetailFragment : Fragment() {
 
     private val crimeDetailViewModel: CrimeDetailViewModel by viewModels {
         CrimeDetailViewModelFactory(args.crimeId)
+    }
+    private val suspectIntent = object : ActivityResultContract<Void?, Uri?>() {
+        override fun createIntent(context: Context, input: Void?): Intent {
+            return Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI)
+        }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
+            return intent.takeIf { resultCode == Activity.RESULT_OK }?.data
+        }
+    }
+
+    private val selectSuspect = registerForActivityResult(
+        suspectIntent         //ActivityResultContracts.PickContact()
+    ) { uri: Uri? ->
+        uri?.let { parseContactSelection(uri) }
     }
 
     /*override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,6 +122,18 @@ class CrimeDetailFragment : Fragment() {
                     oldCrime.copy(isPolice = isChecked)
                 }
             }
+
+            crimeSuspect.setOnClickListener {
+                selectSuspect.launch(null)
+            }
+
+            //для проверки вызова приложения контакты создадим интент (вызываем контакты)
+            val selectSuspectIntent = selectSuspect.contract.createIntent(
+                requireContext(),
+                null
+            )
+            crimeSuspect.isEnabled = canResolveIntent(selectSuspectIntent)
+            crimeCallSuspect.isEnabled = false
         }
 
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -171,11 +208,24 @@ class CrimeDetailFragment : Fragment() {
                 }
                 // startActivity(reportIntent)
 
-                //создание выборщика
+                //создание выборщика, выбор будет даже если установлено действие по умолчанию
                 val chooserIntent =
                     Intent.createChooser(reportIntent, getString(R.string.send_report))
                 startActivity(chooserIntent)
             }
+            crimeSuspect.text = crime.suspect.ifEmpty {
+                getString(R.string.crime_suspect_text)
+            }  //если не пусто, то будет применено действие по умолчанию в скобках
+            /*crimeCallSuspect.text = crime.suspectTel.ifEmpty {
+                getString(R.string.crime_call_suspect)
+            }*/
+            crimeCallSuspect.setOnClickListener{
+                val intent = Intent(Intent.ACTION_DIAL).apply {
+                    data = Uri.parse("tel:" + crime.suspectTel)
+                }
+                startActivity(intent)
+            }
+            crimeCallSuspect.isEnabled = crime.suspectTel.isNotBlank()
         }
     }
 
@@ -185,14 +235,52 @@ class CrimeDetailFragment : Fragment() {
         } else {
             getString(R.string.crime_report_unsolved)
         }
-
         val dateString = DateFormat.format(DATE_FORMAT, crime.date).toString()
         val suspectText = if (crime.suspect.isBlank()) {
             getString(R.string.crime_report_no_suspect)
         } else {
             getString(R.string.crime_report_suspect, crime.suspect)
         }
-
         return getString(R.string.crime_report, crime.title, dateString, solvedString, suspectText)
     }
+
+    @SuppressLint("Range")
+    private fun parseContactSelection(contactUri: Uri) {
+        //запрашиваем все имена отоброжаемых данных(контактов)
+
+        val queryFields = arrayOf(
+            ContactsContract.Contacts.DISPLAY_NAME,
+            ContactsContract.CommonDataKinds.Phone.NUMBER
+        )
+
+        //обращаемся к БД контактов и создаем курсор
+        //курсор указывает на таблицу БД, содержащую ожну строку и один столбец
+        //строка педстовляет контакт, который выбрал пользователь, и указаный столбец имеет имя контакта
+        val queryCursor =
+            requireActivity().contentResolver.query(
+                contactUri, queryFields,
+                null, null, null
+            )
+
+        queryCursor?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                //moveToFirst выполняет перемещение курсора в первую строку, и определяет есть ли данный и возврвщает Boolean
+                val suspect = cursor.getString(0)
+                // val suspect = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                val suspectTel = cursor.getString(1)
+                crimeDetailViewModel.updateCrime { oldCrime ->
+                    oldCrime.copy(suspect = suspect, suspectTel = suspectTel)
+                }
+            }
+        }
+    }
+
+    //для проверки может ли наша ОС выполнить неявный интент
+    private fun canResolveIntent(intent: Intent): Boolean {
+        val packageManager: PackageManager = requireActivity().packageManager
+        val resolvedActivity: ResolveInfo? =
+            packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+        return resolvedActivity != null
+    }
+
 }
