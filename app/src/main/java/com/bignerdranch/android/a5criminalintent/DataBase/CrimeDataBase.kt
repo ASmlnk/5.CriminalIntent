@@ -8,7 +8,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.bignerdranch.android.a5criminalintent.Crime
 
-@Database(entities = [Crime::class], version = 3)
+@Database(entities = [Crime::class], version = 4)
 @TypeConverters(CrimeTypeConverters::class)
 abstract class CrimeDataBase : RoomDatabase() {
     abstract fun crimeDao(): CrimeDao
@@ -27,5 +27,11 @@ val migration_2_3 = object : Migration(2,3) {
         database.execSQL(
             "ALTER TABLE Crime ADD COLUMN suspectTel TEXT NOT NULL DEFAULT ''"
         )
+    }
+}
+
+val migration_3_4 = object : Migration(3,4) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        "ALTER TABLE Crime ADD COLUMN photoFileName TEXT"
     }
 }

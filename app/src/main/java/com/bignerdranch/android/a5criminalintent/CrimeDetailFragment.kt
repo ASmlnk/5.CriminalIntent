@@ -19,6 +19,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.registerForActivityResult
+import androidx.core.content.FileProvider
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -33,6 +34,7 @@ import androidx.navigation.fragment.navArgs
 import com.bignerdranch.android.a5criminalintent.TimePickerFragment.Companion.BUNDLE_KEY_TIME
 import com.bignerdranch.android.a5criminalintent.databinding.FragmentCrimeDetailBinding
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.*
 
 private const val DATE_FORMAT = "EEE, MMM, dd"
@@ -63,6 +65,18 @@ class CrimeDetailFragment : Fragment() {
             return intent.takeIf { resultCode == Activity.RESULT_OK }?.data
         }
     }
+
+    private var photoName: String? = null
+    private val takePhoto = registerForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { didTakePhoto ->
+        if (didTakePhoto && photoName != null) {
+            crimeDetailViewModel.updateCrime { oldCrime ->
+                oldCrime.copy(photoFileName = photoName)
+            }
+        }
+    }
+
 
     private val selectSuspect = registerForActivityResult(
         suspectIntent         //ActivityResultContracts.PickContact()
@@ -134,6 +148,23 @@ class CrimeDetailFragment : Fragment() {
             )
             crimeSuspect.isEnabled = canResolveIntent(selectSuspectIntent)
             crimeCallSuspect.isEnabled = false
+
+            crimeCamera.setOnClickListener {
+                photoName = "IMG_${Date()}.JPG"
+                val photoFile = File(requireContext().applicationContext.filesDir, photoName)
+                val photoUri = FileProvider.getUriForFile(
+                    requireContext(),
+                    "com.bignerdranch.android.a5criminalintent.fileprovider",
+                    photoFile
+                )
+                takePhoto.launch(photoUri)
+            }
+
+            /*val captureImageIntent = takePhoto.contract.createIntent(
+                requireContext(),
+                null
+            )
+            crimeCamera.isEnabled = canResolveIntent(captureImageIntent)*/
         }
 
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -219,7 +250,7 @@ class CrimeDetailFragment : Fragment() {
             /*crimeCallSuspect.text = crime.suspectTel.ifEmpty {
                 getString(R.string.crime_call_suspect)
             }*/
-            crimeCallSuspect.setOnClickListener{
+            crimeCallSuspect.setOnClickListener {
                 val intent = Intent(Intent.ACTION_DIAL).apply {
                     data = Uri.parse("tel:" + crime.suspectTel)
                 }

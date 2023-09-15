@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.bignerdranch.android.a5criminalintent.DataBase.CrimeDataBase
 import com.bignerdranch.android.a5criminalintent.DataBase.migration_1_2
 import com.bignerdranch.android.a5criminalintent.DataBase.migration_2_3
+import com.bignerdranch.android.a5criminalintent.DataBase.migration_3_4
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
@@ -24,8 +25,11 @@ class CrimeRepository private constructor(
             CrimeDataBase::class.java,
             DATABASE_NAME
         )
-        .addMigrations(migration_1_2)
-        .addMigrations(migration_2_3)
+        .addMigrations(
+            migration_1_2,
+            migration_2_3,
+            migration_3_4
+        )
         .build()
 
     fun getCrimes(): Flow<List<Crime>> = database.crimeDao().getCrimes()
@@ -42,10 +46,10 @@ class CrimeRepository private constructor(
         database.crimeDao().addCrime(crime)
     }
 
-     fun deleteCrime(crime: Crime) {
-         coroutineScope.launch {
-             database.crimeDao().deleteCrime(crime)
-         }
+    fun deleteCrime(crime: Crime) {
+        coroutineScope.launch {
+            database.crimeDao().deleteCrime(crime)
+        }
     }
 
     companion object {
