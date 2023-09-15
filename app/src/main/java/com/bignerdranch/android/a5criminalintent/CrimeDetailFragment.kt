@@ -77,7 +77,6 @@ class CrimeDetailFragment : Fragment() {
         }
     }
 
-
     private val selectSuspect = registerForActivityResult(
         suspectIntent         //ActivityResultContracts.PickContact()
     ) { uri: Uri? ->
