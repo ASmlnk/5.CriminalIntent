@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -20,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.registerForActivityResult
 import androidx.core.content.FileProvider
+import androidx.core.view.doOnLayout
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -159,11 +162,11 @@ class CrimeDetailFragment : Fragment() {
                 takePhoto.launch(photoUri)
             }
 
-            /*val captureImageIntent = takePhoto.contract.createIntent(
+            val captureImageIntent = takePhoto.contract.createIntent(
                 requireContext(),
-                null
+                Uri.parse("")
             )
-            crimeCamera.isEnabled = canResolveIntent(captureImageIntent)*/
+            crimeCamera.isEnabled = canResolveIntent(captureImageIntent)
         }
 
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -257,6 +260,7 @@ class CrimeDetailFragment : Fragment() {
             }
             crimeCallSuspect.isEnabled = crime.suspectTel.isNotBlank()
         }
+        updatePhoto(crime.photoFileName)
     }
 
     private fun getCrimeReport(crime: Crime): String {
@@ -313,4 +317,41 @@ class CrimeDetailFragment : Fragment() {
         return resolvedActivity != null
     }
 
+    private fun updatePhoto(photoFileName: String?) {
+        if (binding.crimePhoto.tag != photoFileName) {
+            val photoFile = photoFileName?.let {
+                File(requireContext().applicationContext.filesDir, it)
+            }
+
+            if (photoFile?.exists() == true) {
+                binding.crimePhoto.doOnLayout { measuredView ->
+                    val scaledBitmap = getScaleBitmap(
+                        photoFile.path,
+                        measuredView.width,
+                        measuredView.height
+                    )
+                    val matrix = Matrix()
+                    if (scaledBitmap.height < scaledBitmap.width) {
+                        matrix.postRotate(90F)
+                    } else {
+                        matrix.postRotate(0F)
+                    }
+                    val bitmap = Bitmap.createBitmap(
+                        scaledBitmap,
+                        0,
+                        0,
+                        scaledBitmap.width,
+                        scaledBitmap.height,
+                        matrix,
+                        true
+                    )
+                    binding.crimePhoto.setImageBitmap(bitmap)  //binding.crimePhoto.setImageBitmap(scaledBitmap)
+                    binding.crimePhoto.tag = photoFileName
+                }
+            } else {
+                binding.crimePhoto.setImageBitmap(null)
+                binding.crimePhoto.tag = null
+            }
+        }
+    }
 }
