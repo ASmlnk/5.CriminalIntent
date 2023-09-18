@@ -259,6 +259,25 @@ class CrimeDetailFragment : Fragment() {
                 startActivity(intent)
             }
             crimeCallSuspect.isEnabled = crime.suspectTel.isNotBlank()
+
+            crimePhoto.setOnClickListener {
+                val photoFile = crime.photoFileName?.let {
+                    File(requireContext().applicationContext.filesDir, it)
+                }
+
+                binding.fragmentLayout.doOnLayout { measuredView ->
+                    val bitmap = getScaleBitmap(
+                        photoFile!!.path,
+                        measuredView.width,
+                        measuredView.height
+                    )
+                    findNavController().navigate(
+                        CrimeDetailFragmentDirections.selectPhotoCrime(bitmap)
+                    )
+                }
+            }
+
+            crimePhoto.isEnabled = !crime.photoFileName.isNullOrBlank()
         }
         updatePhoto(crime.photoFileName)
     }
@@ -330,22 +349,8 @@ class CrimeDetailFragment : Fragment() {
                         measuredView.width,
                         measuredView.height
                     )
-                    val matrix = Matrix()
-                    if (scaledBitmap.height < scaledBitmap.width) {
-                        matrix.postRotate(90F)
-                    } else {
-                        matrix.postRotate(0F)
-                    }
-                    val bitmap = Bitmap.createBitmap(
-                        scaledBitmap,
-                        0,
-                        0,
-                        scaledBitmap.width,
-                        scaledBitmap.height,
-                        matrix,
-                        true
-                    )
-                    binding.crimePhoto.setImageBitmap(bitmap)  //binding.crimePhoto.setImageBitmap(scaledBitmap)
+
+                    binding.crimePhoto.setImageBitmap(scaledBitmap)  //binding.crimePhoto.setImageBitmap(scaledBitmap)
                     binding.crimePhoto.tag = photoFileName
                 }
             } else {

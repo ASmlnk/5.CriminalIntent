@@ -2,6 +2,7 @@ package com.bignerdranch.android.a5criminalintent
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import kotlin.math.roundToInt
 
 fun getScaleBitmap(path: String, desWidth: Int, desHeight: Int): Bitmap {
@@ -22,7 +23,23 @@ fun getScaleBitmap(path: String, desWidth: Int, desHeight: Int): Bitmap {
         minOf(heightScale,widthScale).roundToInt()
     }
 
-    return BitmapFactory.decodeFile(path, BitmapFactory.Options().apply {
+    val sampleBitmap = BitmapFactory.decodeFile(path, BitmapFactory.Options().apply {
         inSampleSize = sampleSize
     })
+
+    val matrix = Matrix()
+    if (sampleBitmap.height < sampleBitmap.width) {
+        matrix.postRotate(90F)
+    } else {
+        matrix.postRotate(0F)
+    }
+    return Bitmap.createBitmap(
+        sampleBitmap,
+        0,
+        0,
+        sampleBitmap.width,
+        sampleBitmap.height,
+        matrix,
+        true
+    )
 }
