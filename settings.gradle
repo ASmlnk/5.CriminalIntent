@@ -16,3 +16,4 @@ rootProject.name = "5.CriminalIntent"
 include ':app'
 
 include ':photogallery'
+include ':draganddraw'

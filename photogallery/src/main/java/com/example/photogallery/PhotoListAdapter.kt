@@ -1,7 +1,9 @@
 package com.example.photogallery
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.photogallery.databinding.ListItemGelleryBinding
@@ -18,16 +20,21 @@ RecyclerView.ViewHolder(binding.root){
             return PhotoViewHolder(binding)
         }
     }
-    fun bind(galleryItem: GalleryItem) {
+    fun bind(galleryItem: GalleryItem, onItemClicked: (Uri) -> Unit) {
         binding.itemImageView.load(galleryItem.url) {
             placeholder(R.drawable.ic_launcher_foreground)
         }
+        binding.root.setOnClickListener {
+            onItemClicked(galleryItem.photoPageUri)
+        }
 
     }
-
 }
 
-class PhotoListAdapter(private val galleryItems: List<GalleryItem>):
+class PhotoListAdapter(
+    private val galleryItems: List<GalleryItem>,
+    private val onItemClicked: (Uri) -> Unit
+):
 RecyclerView.Adapter<PhotoViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder =
         PhotoViewHolder.fromInflater(parent)
@@ -36,6 +43,6 @@ RecyclerView.Adapter<PhotoViewHolder>(){
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val item = galleryItems[position]
-        holder.bind(item)
+        holder.bind(item, onItemClicked)
     }
 }

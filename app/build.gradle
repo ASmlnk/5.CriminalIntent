@@ -45,7 +45,7 @@ android {
     dataBinding {
         enabled = true
     }
-
+    namespace 'com.bignerdranch.android.a5criminalintent'
 
 
 }
